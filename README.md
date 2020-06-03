@@ -1,4 +1,7 @@
 # Chinook SectionsNavigation and StackNavigation
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 {Project tag line}
 
@@ -35,4 +38,15 @@ Be mindful of our [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/MatFillion"><img src="https://avatars0.githubusercontent.com/u/7029537?v=4" width="100px;" alt=""/><br /><sub><b>Mathieu Fillion</b></sub></a><br /><a href="https://github.com/nventive/Chinook.Navigation/commits?author=MatFillion" title="Code">💻</a> <a href="#platform-MatFillion" title="Packaging/porting to new platform">📦</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->

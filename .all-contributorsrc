@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "MatFillion",
+      "name": "Mathieu Fillion",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7029537?v=4",
+      "profile": "https://github.com/MatFillion",
+      "contributions": [
+        "code",
+        "platform"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Chinook.Navigation",
+  "projectOwner": "nventive",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
