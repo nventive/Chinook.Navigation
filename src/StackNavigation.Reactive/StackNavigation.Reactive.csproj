@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>Chinook.StackNavigation</RootNamespace>
+    <Authors>nventive</Authors>
+    <Company>nventive</Company>
+    <AssemblyName>Chinook.StackNavigation.Reactive</AssemblyName>
+    <Description>Chinook.StackNavigation.Reactive</Description>
+    <PackageId>Chinook.StackNavigation.Reactive</PackageId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StackNavigation.Abstractions\StackNavigation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

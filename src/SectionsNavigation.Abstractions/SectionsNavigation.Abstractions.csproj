@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>Chinook.SectionsNavigation</RootNamespace>
+    <Authors>nventive</Authors>
+    <Company>nventive</Company>
+    <AssemblyName>Chinook.SectionsNavigation.Abstractions</AssemblyName>
+    <Description>Chinook.SectionsNavigation.Abstractions</Description>
+    <PackageId>Chinook.SectionsNavigation.Abstractions</PackageId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StackNavigation.Abstractions\StackNavigation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
