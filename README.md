@@ -43,6 +43,7 @@ Be mindful of our [Code of Conduct](CODE_OF_CONDUCT.md).
 <table>
   <tr>
     <td align="center"><a href="https://github.com/MatFillion"><img src="https://avatars0.githubusercontent.com/u/7029537?v=4" width="100px;" alt=""/><br /><sub><b>Mathieu Fillion</b></sub></a><br /><a href="https://github.com/nventive/Chinook.Navigation/commits?author=MatFillion" title="Code">💻</a> <a href="#platform-MatFillion" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://github.com/jeremiethibeault"><img src="https://avatars3.githubusercontent.com/u/5444226?v=4" width="100px;" alt=""/><br /><sub><b>Jérémie Thibeault</b></sub></a><br /><a href="https://github.com/nventive/Chinook.Navigation/commits?author=jeremiethibeault" title="Code">💻</a> <a href="https://github.com/nventive/Chinook.Navigation/commits?author=jeremiethibeault" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/jeanplevesque"><img src="https://avatars3.githubusercontent.com/u/39710855?v=4" width="100px;" alt=""/><br /><sub><b>Jean-Philippe Lévesque</b></sub></a><br /><a href="https://github.com/nventive/Chinook.Navigation/commits?author=jeanplevesque" title="Code">💻</a> <a href="https://github.com/nventive/Chinook.Navigation/commits?author=jeanplevesque" title="Tests">⚠️</a></td>
   </tr>
 </table>
