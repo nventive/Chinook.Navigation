@@ -14,11 +14,12 @@
     checkLatest: false
 
 - task: NuGetCommand@2
+  displayName: 'Push to nventive-public'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/$(ArtifactName)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'nventive'
+    nuGetFeedType: 'external' # external because builds and packages in different azure-devops organisations.
+    publishFeedCredentials: 'nventive-public' # This is the name of the Service connection defined in https://dev.azure.com/nventive/Open%20Source
 
 - task: PostBuildCleanup@3
   displayName: 'Post-Build cleanup :  Cleanup files to keep build server clean!'
