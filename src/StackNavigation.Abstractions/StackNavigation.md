@@ -42,7 +42,7 @@ You can observe the state with the `IStackNavigator.StateChanged` event.
 
 ### No double navigation
 If you invoke 2 operations simultaneously (double tap, press 2 buttons with 2 fingers, etc.), only the first will actually run.
-This is because the the request state (either processing or processed) is part of the `IStackNavigator.State`.
+This is because the request state (Processing, Processed or FailedToProcess) is part of the `ISectionsNavigator.State`.
 If a request is made while another is processing, the second request is cancelled.
 
 ### Clear back stack on forward navigation

@@ -80,7 +80,7 @@ You can observe the state with the `ISectionsNavigator.StateChanged` event.
 
 ### No double navigation
 If you invoke 2 operations simultaneously (double tap, press 2 buttons with 2 fingers, etc.), only the first will actually run.
-This is because the the request state (either processing or processed) is part of the `ISectionsNavigator.State`.
+This is because the request state (Processing, Processed or FailedToProcess) is part of the `ISectionsNavigator.State`.
 If a request is made while another is processing, the second request is cancelled.
 
 ### Background navigation
@@ -96,3 +96,6 @@ When using `FrameSectionsNavigator`, you can customize or remove the animations 
 Because `BlindSectionsNavigator` doesn't require any view, you can use it in tests projects.
 This allows for unit testing or integration testing of navigation scenarios.
 e.g. You could assert that the state of the navigator contains specific view models after some specific actions.
+
+### Modals
+`ISectionsNavigator` allows you to handle multiple stacks of navigation in your app, including modals. This means you can easily handle navigation with your modals, since the modals are just in another navigation stack. For instance, the user can navigate back and forth in the modals, and background processes can navigate as needed in the pages behind the modals, without breaking the flow.
