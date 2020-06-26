@@ -51,7 +51,7 @@ stages:
   # Only release when the build is not for a Pull Request and branch name fits
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['IsReleaseBranch'], 'true'))
   jobs:
-  - job: Publish_NuGet_Internal
+  - job: Publish_NuGet_External
   
     pool:
       name: Container
