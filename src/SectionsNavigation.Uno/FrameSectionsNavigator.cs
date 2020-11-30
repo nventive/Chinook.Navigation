@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Chinook.StackNavigation;
 using Windows.UI.Core;
+#if HAS_WINUI
+using Microsoft.UI.Xaml.Controls;
+#else
 using Windows.UI.Xaml.Controls;
+#endif
 
 namespace Chinook.SectionsNavigation
 {

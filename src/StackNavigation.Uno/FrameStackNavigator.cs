@@ -6,10 +6,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Core;
+#if HAS_WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+#endif
 
 namespace Chinook.StackNavigation
 {
@@ -177,7 +184,7 @@ namespace Chinook.StackNavigation
 						var viewTcs = new TaskCompletionSource<Page>();
 						page.Loaded += OnPageLoaded;
 
-						void OnPageLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+						void OnPageLoaded(object sender, RoutedEventArgs e)
 						{
 							page.Loaded -= OnPageLoaded;
 							viewTcs.SetResult(page);
