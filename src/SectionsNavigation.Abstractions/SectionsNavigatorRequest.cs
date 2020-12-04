@@ -58,7 +58,7 @@ namespace Chinook.SectionsNavigation
 			newModalStackNavigationRequest: null
 		);
 
-		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int ? modalPriority = null) => new SectionsNavigatorRequest(
+		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.OpenModal,
 			sectionName: null,
 			modalName: modalName,
@@ -120,7 +120,36 @@ namespace Chinook.SectionsNavigation
 
 		public override string ToString()
 		{
-			return $"{RequestType}, {nameof(SectionName)}: {SectionName}";
+			var builder = new StringBuilder($"{RequestType}");
+			if (SectionName != null)
+			{
+				builder.Append(", ");
+				builder.Append(nameof(SectionName));
+				builder.Append($": {SectionName}");
+			}
+
+			if (ModalName != null)
+			{
+				builder.Append(", ");
+				builder.Append(nameof(ModalName));
+				builder.Append($": {ModalName}");
+			}
+
+			if (ModalPriority != null)
+			{
+				builder.Append(", ");
+				builder.Append(nameof(ModalPriority));
+				builder.Append($": {ModalPriority}");
+			}
+
+			if (NewModalStackNavigationRequest != null)
+			{
+				builder.Append(", ");
+				builder.Append(nameof(NewModalStackNavigationRequest));
+				builder.Append($": ({NewModalStackNavigationRequest})");
+			}
+
+			return builder.ToString();
 		}
 	}
 }

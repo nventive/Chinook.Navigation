@@ -196,8 +196,15 @@ namespace Chinook.StackNavigation
 						}
 						else
 						{
+#if __IOS__
+							// The event sequence doesn't seem to work properly on iOS.
+							// The Loaded event doesn't seem to be raised so we don't wait and simply return the page.
+							page.Loaded -= OnPageLoaded;
+							return page;
+#else
 							// If the _frame is visible and the page is not loaded, we wait for the page to load.
-							return await viewTcs.Task;							
+							return await viewTcs.Task;
+#endif
 						}
 					}
 					else
@@ -229,7 +236,7 @@ namespace Chinook.StackNavigation
 					throw;
 				}
 			}
-		}		
+		}
 
 		protected override async Task InnerNavigateBack(NavigationStackEntry entryToRemove, NavigationStackEntry activeEntry)
 		{
@@ -245,7 +252,7 @@ namespace Chinook.StackNavigation
 					// There's no way to know when the animation ends. So, we assume it runs for 250ms.
 					await Task.Delay(millisecondsDelay: 250);
 				}
-			}			
+			}
 
 			_ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entryToRemove));
 
@@ -278,7 +285,7 @@ namespace Chinook.StackNavigation
 						_logger.LogError($"Failed frame navigate back.", e);
 					}
 				}
-			}			
+			}
 		}
 
 		private async Task<NavigationEventArgs> WaitForNavigationResult(Action frameOperation)
@@ -286,13 +293,13 @@ namespace Chinook.StackNavigation
 			var tcs = new TaskCompletionSource<NavigationEventArgs>();
 
 			void OnNavigated(object sender, NavigationEventArgs e)
-				=> tcs.SetResult(e);
+				=> tcs.TrySetResult(e);
 
 			void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-				=> tcs.SetException(e.Exception);
+				=> tcs.TrySetException(e.Exception);
 
 			void OnNavigationStopped(object sender, NavigationEventArgs e)
-				=> tcs.SetException(new NavigationCanceledException());
+				=> tcs.TrySetException(new NavigationCanceledException());
 
 			try
 			{

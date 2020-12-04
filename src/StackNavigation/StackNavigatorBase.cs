@@ -103,7 +103,7 @@ namespace Chinook.StackNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning("Canceled 'Clear' operation because another request is processing.");
+						_logger.LogWarning($"Canceled 'Clear' operation because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return;
@@ -172,7 +172,7 @@ namespace Chinook.StackNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning($"Canceled 'RemoveEntry' operation for items [{logIndexes}] because another request is processing.");
+						_logger.LogWarning($"Canceled 'RemoveEntry' operation for items [{logIndexes}] because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return;
@@ -245,7 +245,7 @@ namespace Chinook.StackNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning($"Canceled 'Clear' operation to '{request.ViewModelType.FullName}' because another request is processing.");
+						_logger.LogWarning($"Canceled 'Navigate' operation to '{request.ViewModelType.FullName}' because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return null;
@@ -316,7 +316,7 @@ namespace Chinook.StackNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning("Canceled 'NavigateBack' operation because another request is processing.");
+						_logger.LogWarning($"Canceled 'NavigateBack' operation because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return null;
