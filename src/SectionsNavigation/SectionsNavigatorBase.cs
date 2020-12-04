@@ -93,7 +93,7 @@ namespace Chinook.SectionsNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning("Canceled 'OpenModal' operation because another request is processing.");
+						_logger.LogWarning($"Canceled 'OpenModal' operation because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return null;
@@ -222,7 +222,7 @@ namespace Chinook.SectionsNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning("Canceled 'SetActiveSection' operation because another request is processing.");
+						_logger.LogWarning($"Canceled 'SetActiveSection' operation because another request is processing.  (Processing request: '{State.LastRequest}')");
 					}
 
 					return null;
@@ -312,7 +312,7 @@ namespace Chinook.SectionsNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning("Canceled 'CloseModal' operation because another request is processing.");
+						_logger.LogWarning($"Canceled 'CloseModal' operation because another request is processing. (Processing request: '{State.LastRequest}')");
 					}
 
 					return;
