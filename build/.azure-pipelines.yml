@@ -10,7 +10,7 @@ pr:
 resources:
    containers:
      - container: windows
-       image: nventive/build-agent:vs16.6.0
+       image: nventive/vs_build-tools:16.8.6
 
 variables:
 - name: NUGET_VERSION
