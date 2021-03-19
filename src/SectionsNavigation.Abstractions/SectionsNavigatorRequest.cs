@@ -50,37 +50,41 @@ namespace Chinook.SectionsNavigation
 
 	public class SectionsNavigatorRequest
 	{
-		public static SectionsNavigatorRequest GetSetActiveSectionRequest(string controllerName) => new SectionsNavigatorRequest(
+		public static SectionsNavigatorRequest GetSetActiveSectionRequest(string controllerName, SectionsNavigatorTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.SetActiveSection,
 			sectionName: controllerName,
 			modalName: null,
 			modalPriority: null,
-			newModalStackNavigationRequest: null
+			newModalStackNavigationRequest: null,
+			transitionInfo: transitionInfo
 		);
 
-		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null) => new SectionsNavigatorRequest(
+		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null, SectionsNavigatorTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.OpenModal,
 			sectionName: null,
 			modalName: modalName,
 			modalPriority: modalPriority,
-			newModalStackNavigationRequest: newModalStackNavigationRequest
+			newModalStackNavigationRequest: newModalStackNavigationRequest,
+			transitionInfo: transitionInfo
 		);
 
-		public static SectionsNavigatorRequest GetCloseModalRequest(string modalName = null, int? modalPriority = null) => new SectionsNavigatorRequest(
+		public static SectionsNavigatorRequest GetCloseModalRequest(string modalName = null, int? modalPriority = null, SectionsNavigatorTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.CloseModal,
 			sectionName: null,
 			modalName: modalName,
 			modalPriority: modalPriority,
-			newModalStackNavigationRequest: null
+			newModalStackNavigationRequest: null,
+			transitionInfo: transitionInfo
 		);
 
-		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest)
+		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest, SectionsNavigatorTransitionInfo transitionInfo)
 		{
 			RequestType = requestType;
 			SectionName = sectionName;
 			ModalName = modalName;
 			ModalPriority = modalPriority;
 			NewModalStackNavigationRequest = newModalStackNavigationRequest;
+			TransitionInfo = transitionInfo;
 		}
 
 		/// <summary>
@@ -117,6 +121,11 @@ namespace Chinook.SectionsNavigation
 		/// This request is processed before the new modal becomes active.
 		/// </summary>
 		public StackNavigatorRequest NewModalStackNavigationRequest { get; }
+
+		/// <summary>
+		/// Gets the <see cref="TransitionInfo"/> for the operation.
+		/// </summary>
+		public SectionsNavigatorTransitionInfo TransitionInfo {get;}
 
 		public override string ToString()
 		{
