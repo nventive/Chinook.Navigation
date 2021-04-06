@@ -54,7 +54,7 @@ namespace Chinook.StackNavigation
 								_logger.LogDebug($"Processing frame initiated back.");
 							}
 
-							// When the LastRequestState isn't Processing, the controller didn't cause the Navigated event.
+							// When the LastRequestState isn't Processing, the navigator didn't cause the Navigated event.
 							// The Frame must have initiated a back navigation on its own (i.e., swipe to go back on iOS).
 							// When that happens, we simulate a back navigation without re-triggering a back navigation on the Frame.
 							_isProcessingFrameInitiatedBack = true;
@@ -132,7 +132,7 @@ namespace Chinook.StackNavigation
 				}
 				else
 				{
-					throw new KeyNotFoundException($"Can't process navigation because no view is registered with '{request.ViewModelType.FullName}'. Provide a view type in the NavigationRequest or add a registration using 'INavigationController.Register(...)'.");
+					throw new KeyNotFoundException($"Can't process navigation because no view is registered with '{request.ViewModelType.FullName}'. Provide a view type in the NavigationRequest or provide a registration in the constructor.");
 				}
 			}
 

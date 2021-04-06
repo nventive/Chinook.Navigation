@@ -5,6 +5,9 @@ using Chinook.StackNavigation;
 
 namespace Chinook.SectionsNavigation
 {
+	/// <summary>
+	/// Represents the type of <see cref="SectionsNavigatorRequest"/>.
+	/// </summary>
 	public enum SectionsNavigatorRequestType
 	{
 		/// <summary>
@@ -14,6 +17,7 @@ namespace Chinook.SectionsNavigation
 		///		<item><see cref="SectionsNavigatorRequest.ModalName"/> (Optional)</item>
 		///		<item><see cref="SectionsNavigatorRequest.ModalPriority"/> (Optional)</item>
 		///		<item><see cref="SectionsNavigatorRequest.NewModalStackNavigationRequest"/></item>
+		///		<item><see cref="SectionsNavigatorRequest.TransitionInfo"/> (Optional)</item>
 		/// </list>
 		/// </summary>
 		OpenModal,
@@ -23,6 +27,7 @@ namespace Chinook.SectionsNavigation
 		/// <list type="bullet">
 		///		<listheader><term>Relevant <see cref="SectionsNavigatorRequest"/> properties</term></listheader>
 		///		<item><see cref="SectionsNavigatorRequest.SectionName"/></item>
+		///		<item><see cref="SectionsNavigatorRequest.TransitionInfo"/> (Optional)</item>
 		/// </list>
 		/// </summary>
 		SetActiveSection,
@@ -33,6 +38,7 @@ namespace Chinook.SectionsNavigation
 		///		<listheader><term>Relevant <see cref="SectionsNavigatorRequest"/> properties</term></listheader>
 		///		<item><see cref="SectionsNavigatorRequest.ModalName"/> (Optional)</item>
 		///		<item><see cref="SectionsNavigatorRequest.ModalPriority"/> (Optional)</item>
+		///		<item><see cref="SectionsNavigatorRequest.TransitionInfo"/> (Optional)</item>
 		/// </list>
 		/// </summary>
 		CloseModal,
@@ -48,39 +54,76 @@ namespace Chinook.SectionsNavigation
 		ReportSectionStateChanged
 	}
 
+	/// <summary>
+	/// Represents the request to be executed by a <see cref="ISectionsNavigator"/>.
+	/// </summary>
 	public class SectionsNavigatorRequest
 	{
-		public static SectionsNavigatorRequest GetSetActiveSectionRequest(string controllerName) => new SectionsNavigatorRequest(
+		/// <summary>
+		/// Create a new instance of <see cref="SectionsNavigatorRequest"/> of type <see cref="SectionsNavigatorRequestType.SetActiveSection"/>.
+		/// </summary>
+		/// <param name="sectionName">The section name.</param>
+		/// <param name="transitionInfo">The optional transition info.</param>
+		/// <returns>The newly created request.</returns>
+		public static SectionsNavigatorRequest GetSetActiveSectionRequest(string sectionName, SectionsTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.SetActiveSection,
-			sectionName: controllerName,
+			sectionName: sectionName,
 			modalName: null,
 			modalPriority: null,
-			newModalStackNavigationRequest: null
+			newModalStackNavigationRequest: null,
+			transitionInfo: transitionInfo
 		);
 
-		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null) => new SectionsNavigatorRequest(
+		/// <summary>
+		/// Create a new instance of <see cref="SectionsNavigatorRequest"/> of type <see cref="SectionsNavigatorRequestType.OpenModal"/>.
+		/// </summary>
+		/// <param name="newModalStackNavigationRequest">The initial <see cref="StackNavigatorRequest"/> for the new <see cref="IModalStackNavigator"/>.</param>
+		/// <param name="modalName">The optional modal name.</param>
+		/// <param name="modalPriority">The optional modal priority.</param>
+		/// <param name="transitionInfo">The optional transition info.</param>
+		/// <returns>The newly created request.</returns>
+		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null, SectionsTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.OpenModal,
 			sectionName: null,
 			modalName: modalName,
 			modalPriority: modalPriority,
-			newModalStackNavigationRequest: newModalStackNavigationRequest
+			newModalStackNavigationRequest: newModalStackNavigationRequest,
+			transitionInfo: transitionInfo
 		);
 
-		public static SectionsNavigatorRequest GetCloseModalRequest(string modalName = null, int? modalPriority = null) => new SectionsNavigatorRequest(
+		/// <summary>
+		/// Create a new instance of <see cref="SectionsNavigatorRequest"/> of type <see cref="SectionsNavigatorRequestType.CloseModal"/>.
+		/// </summary>
+		/// <param name="modalName">The optional modal name.</param>
+		/// <param name="modalPriority">The optional modal priority.</param>
+		/// <param name="transitionInfo">The optional transition info.</param>
+		/// <returns>The newly created request.</returns>
+		public static SectionsNavigatorRequest GetCloseModalRequest(string modalName = null, int? modalPriority = null, SectionsTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.CloseModal,
 			sectionName: null,
 			modalName: modalName,
 			modalPriority: modalPriority,
-			newModalStackNavigationRequest: null
+			newModalStackNavigationRequest: null,
+			transitionInfo: transitionInfo
 		);
 
-		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest)
+		/// <summary>
+		/// Creates a new instance of <see cref="SectionsNavigatorRequest"/>.
+		/// </summary>
+		/// <param name="requestType">The type of request.</param>
+		/// <param name="sectionName">The sections name associated to this request.</param>
+		/// <param name="modalName">The modal name associated to this request.</param>
+		/// <param name="modalPriority">The modal priority associated to this request.</param>
+		/// <param name="newModalStackNavigationRequest">The <see cref="StackNavigatorRequest"/> associated to this request.</param>
+		/// <param name="transitionInfo">The transition info of this request.</param>
+		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest, SectionsTransitionInfo transitionInfo)
 		{
 			RequestType = requestType;
 			SectionName = sectionName;
 			ModalName = modalName;
 			ModalPriority = modalPriority;
 			NewModalStackNavigationRequest = newModalStackNavigationRequest;
+			TransitionInfo = transitionInfo;
 		}
 
 		/// <summary>
@@ -118,6 +161,12 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		public StackNavigatorRequest NewModalStackNavigationRequest { get; }
 
+		/// <summary>
+		/// Gets the <see cref="TransitionInfo"/> for the operation.
+		/// </summary>
+		public SectionsTransitionInfo TransitionInfo { get; }
+
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			var builder = new StringBuilder($"{RequestType}");

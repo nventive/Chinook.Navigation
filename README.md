@@ -166,8 +166,11 @@ If a request is made while another is processing, the second request is cancelle
 ### Background Navigation
 You can navigate in sections that are not active. This is useful if you want to _prepare_ a section before entering it.
 
-### Customize Animations
-When using `FrameSectionsNavigator`, you can customize or remove the animations of the `MultiFrame` using `MultiFrame.Animations`.
+### Transitions and Animations
+For stack navigation, you can suppress the default transition using `StackNavigatorRequest.SuppressTransitions`.
+
+For sections navigation, you can customize or disable animations using `SectionsNavigatorRequest.TransitionInfo`.
+You can read more on that [here](src/SectionsNavigation.Abstractions/SectionsNavigation.md#transitions-and-animations).
 
 ### Modals
 `ISectionsNavigator` allows you to handle multiple stacks of navigation in your app, including modals. This means you can easily handle navigation with your modals, since the modals are just in another navigation stack. For instance, the user can navigate back and forth in the modals, and your app can navigate the pages behind the modals, without breaking the flow.

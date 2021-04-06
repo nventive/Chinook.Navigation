@@ -9,14 +9,25 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+#if __IOS__
+using _UIViewController = UIKit.UIViewController;
+#else
+using _UIViewController = System.Object;
+#endif
 
 namespace Chinook.SectionsNavigation
 {
+	/// <summary>
+	/// This <see cref="FrameworkElement"/> manages multiple <see cref="Frame"/>s in the context of sections navigation.
+	/// </summary>
 	public partial class MultiFrame : Grid
 	{
 		private readonly Dictionary<string, FrameInfo> _frames = new Dictionary<string, FrameInfo>();
 		private readonly TaskCompletionSource<bool> _isReady = new TaskCompletionSource<bool>();
 
+		/// <summary>
+		/// Creates a new instance of <see cref="MultiFrame"/>.
+		/// </summary>
 		public MultiFrame()
 		{
 			Loaded += OnLoaded;
@@ -27,12 +38,18 @@ namespace Chinook.SectionsNavigation
 			_isReady.TrySetResult(true);
 		}
 
+		/// <summary>
+		/// Gets or sets the sections names as a comma-separated list of strings.
+		/// </summary>
 		public string CommaSeparatedSectionsFrameNames
 		{
 			get { return (string)GetValue(CommaSeparatedSectionsFrameNamesProperty); }
 			set { SetValue(CommaSeparatedSectionsFrameNamesProperty, value); }
 		}
 
+		/// <summary>
+		/// <see cref="CommaSeparatedSectionsFrameNames"/>
+		/// </summary>
 		public static readonly DependencyProperty CommaSeparatedSectionsFrameNamesProperty =
 			DependencyProperty.Register("CommaSeparatedSectionsFrameNames", typeof(string), typeof(MultiFrame), new PropertyMetadata(null, OnCommaSeparatedSectionsFrameNamesChanged));
 
@@ -46,7 +63,7 @@ namespace Chinook.SectionsNavigation
 				var names = commaSeparatedNames.Split(',');
 				foreach (var name in names)
 				{
-					that.GetOrCreateFrame(name, priority: 0);
+					that.GetOrCreateFrame(name, priority: 0, transitionInfoType: FrameSectionsTransitionInfoTypes.FrameBased);
 				}
 
 				if (that.SectionsFrameNames == null)
@@ -60,6 +77,9 @@ namespace Chinook.SectionsNavigation
 			}
 		}
 
+		/// <summary>
+		/// The names of the sections.
+		/// </summary>
 		public IReadOnlyList<string> SectionsFrameNames { get; private set; }
 
 		/// <summary>
@@ -76,7 +96,8 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="name">The name of the Frame to retrieve or create.</param>
 		/// <param name="priority">The priority determines the Z order of the view. It's only used when creating a new Frame.</param>
-		public Frame GetOrCreateFrame(string name, int priority) // Must run on UI thread
+		/// <param name="transitionInfoType">The transition info type to determine how to create the Frame.</param>
+		public Frame GetOrCreateFrame(string name, int priority, FrameSectionsTransitionInfoTypes transitionInfoType) // Must run on UI thread
 		{
 			if (_frames.TryGetValue(name, out var existingFrame))
 			{
@@ -94,18 +115,51 @@ namespace Chinook.SectionsNavigation
 
 				var framesAbove = _frames.Values.Where(fi => fi.Priority > priority).ToList();
 				var index = _frames.Count - framesAbove.Count;
-				foreach (var frameAbove in framesAbove)
+
+				FrameInfo frameState;
+
+				switch (transitionInfoType)
 				{
-					++frameAbove.Index;
+					case FrameSectionsTransitionInfoTypes.FrameBased:
+						foreach (var frameAbove in framesAbove)
+						{
+							++frameAbove.Index;
+						}
+
+						frameState = new FrameInfo(frame, index, priority);
+
+						Children.Insert(index, frame);
+						break;
+					case FrameSectionsTransitionInfoTypes.UIViewControllerBased:
+						if (framesAbove.Any())
+						{
+							throw new InvalidOperationException("A UIViewController-based modal must be above all others.");
+						}
+
+						var modalViewController = new ModalViewController(name, frame);
+						modalViewController.ClosedNatively += OnModalViewControllerClosed;
+						frameState = new FrameInfo(frame, index, priority, modalViewController);
+
+						break;
+					default:
+						throw new InvalidOperationException($"Unsupported transition info type '{transitionInfoType}'.");
 				}
 
-				var frameState = new FrameInfo(frame, index, priority);
-
 				_frames.Add(name, frameState);
-				Children.Insert(index, frame);
 
 				return frame;
 			}
+		}
+
+		/// <summary>
+		/// This event is raised when a modal was closed natively. This can only happen when using a native modal (with <see cref="UIViewControllerSectionsTransitionInfo"/>).
+		/// </summary>
+		public event EventHandler<ModalClosedEventArgs> ModalClosedNatively;
+
+		private void OnModalViewControllerClosed(object sender, EventArgs e)
+		{
+			var viewController = (ModalViewController)sender;
+			ModalClosedNatively?.Invoke(this, new ModalClosedEventArgs(viewController.ModalName, viewController.OpeningTransitionInfo));
 		}
 
 		/// <summary>
@@ -148,43 +202,52 @@ namespace Chinook.SectionsNavigation
 
 		/// <summary>
 		/// Changes the active section.
-		/// The animation can be customized using <see cref="Animations.ChangeSectionAnimation_HideFrame1ToRevealFrame2"/> and <see cref="Animations.ChangeSectionAnimation_ShowFrame2ToHideFrame1"/>.
 		/// </summary>
 		/// <param name="previousFrameName">The name of the frame that will no longer be active.</param>
 		/// <param name="nextFrameName">The name of the frame that will be active.</param>
-		public async Task ChangeActiveSection(string previousFrameName, string nextFrameName) // Runs on background thread.
+		/// <param name="transitionInfo">The transition info describing the animation.</param>
+		public async Task ChangeActiveSection(string previousFrameName, string nextFrameName, FrameSectionsTransitionInfo transitionInfo) // Runs on background thread.
 		{
 			await HidePreviousFrameAndShowNextFrame(previousFrameName, nextFrameName, UpdateView);
 
 			async Task UpdateView(FrameInfo previousFrame, FrameInfo nextFrame) // Runs on the UI thread
 			{
-				if (previousFrame.Index > nextFrame.Index)
+				switch (transitionInfo)
 				{
-					// If the previous frame is on top of the next one, we hide the previous frame to reveal the next one underneath.
+					case DelegatingFrameSectionsTransitionInfo frameTransition:
+						if (previousFrame.Index > nextFrame.Index)
+						{
+							// If the previous frame is on top of the next one, we hide the previous frame to reveal the next one underneath.
 
-					// 1.  We must first hide all frames that would be visible between our two target frames.
-					var framesToHideInstantly = _frames.Values
-						.Where(f => f.State == FrameState.Shown && f.Index > nextFrame.Index && f.Index < previousFrame.Index);
+							// 1.  We must first hide all frames that would be visible between our two target frames.
+							var framesToHideInstantly = _frames.Values
+								.Where(f => f.State == FrameState.Shown && f.Index > nextFrame.Index && f.Index < previousFrame.Index);
 
-					foreach (var f in framesToHideInstantly)
-					{
-						f.Frame.Visibility = Visibility.Collapsed;
-						f.State = FrameState.Hidden;
-					}
+							foreach (var f in framesToHideInstantly)
+							{
+								f.Frame.Visibility = Visibility.Collapsed;
+								f.State = FrameState.Hidden;
+							}
 
-					// 2. Animate the previous frame
-					await Animations.ChangeSectionAnimation_HideFrame1ToRevealFrame2(previousFrame.Frame, nextFrame.Frame);
+							// 2. Animate the previous frame
+							await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
 
-					// 3. Once faded out, collapse the previous frame.
-					previousFrame.Frame.Visibility = Visibility.Collapsed;
-				}
-				else
-				{
-					// Otherwise, the next frame is displayed on top of the previous one.
-					await Animations.ChangeSectionAnimation_ShowFrame2ToHideFrame1(previousFrame.Frame, nextFrame.Frame);
+							// 3. Once faded out, collapse the previous frame.
+							previousFrame.Frame.Visibility = Visibility.Collapsed;
+						}
+						else
+						{
+							// Otherwise, the next frame is displayed on top of the previous one.
+							await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
 
-					// 5. Collapse the previous frame that is no longer visible.
-					previousFrame.Frame.Visibility = Visibility.Collapsed;
+							// 5. Collapse the previous frame that is no longer visible.
+							previousFrame.Frame.Visibility = Visibility.Collapsed;
+						}
+						break;
+					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
+						throw new InvalidOperationException($"UIViewControllerTransitionInfo is only supported for modal operations.");
+					default:
+						throw new InvalidOperationException($"Unsupported transition info type '{transitionInfo.GetType()}'.");
 				}
 			}
 		}
@@ -194,13 +257,24 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="previousFrameName">The name of the frame that will be hidden by the modal.</param>
 		/// <param name="nextFrameName">The name of the modal frame.</param>
-		public async Task OpenModal(string previousFrameName, string nextFrameName) // Runs on background thread.
+		/// <param name="transitionInfo">The transition info describing the animation.</param>
+		public async Task OpenModal(string previousFrameName, string nextFrameName, FrameSectionsTransitionInfo transitionInfo) // Runs on background thread.
 		{
 			await HidePreviousFrameAndShowNextFrame(previousFrameName, nextFrameName, UpdateView);
 
 			async Task UpdateView(FrameInfo previousFrame, FrameInfo nextFrame) // Runs on the UI thread
 			{
-				await Animations.OpenModalAnimation(previousFrame.Frame, nextFrame.Frame);
+				switch (transitionInfo)
+				{
+					case DelegatingFrameSectionsTransitionInfo frameTransition:
+						await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, true);
+						break;
+					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
+						await nextFrame.ModalViewController.Open(viewControllerTransitionInfo);
+						break;
+					default:
+						throw new InvalidOperationException($"Unsupported transition info type '{transitionInfo.GetType()}'.");
+				}
 			}
 		}
 
@@ -209,13 +283,24 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="previousFrameName">The name of the modal frame to close.</param>
 		/// <param name="nextFrameName">The name of the frame that will be revealed as a result of closing the modal.</param>
-		public async Task CloseModal(string previousFrameName, string nextFrameName) // Runs on background thread.
+		/// <param name="transitionInfo">The transition info describing the animation.</param>
+		public async Task CloseModal(string previousFrameName, string nextFrameName, FrameSectionsTransitionInfo transitionInfo) // Runs on background thread.
 		{
 			await HidePreviousFrameAndShowNextFrame(previousFrameName, nextFrameName, UpdateView);
 
 			async Task UpdateView(FrameInfo previousFrame, FrameInfo nextFrame) // Runs on the UI thread
 			{
-				await Animations.CloseModalAnimation(previousFrame.Frame, nextFrame.Frame);
+				switch (transitionInfo)
+				{
+					case DelegatingFrameSectionsTransitionInfo frameTransition:
+						await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, true);
+						break;
+					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
+						await previousFrame.ModalViewController.Close(viewControllerTransitionInfo);
+						break;
+					default:
+						throw new InvalidOperationException($"Unsupported transition info type '{transitionInfo.GetType()}'.");
+				}
 			}
 		}
 
@@ -263,11 +348,12 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		private class FrameInfo
 		{
-			public FrameInfo(Frame frame, int index, int priority)
+			public FrameInfo(Frame frame, int index, int priority, ModalViewController modalViewController = null)
 			{
 				Frame = frame;
 				Index = index;
 				Priority = priority;
+				ModalViewController = modalViewController;
 				State = FrameState.Hidden;
 			}
 
@@ -293,6 +379,36 @@ namespace Chinook.SectionsNavigation
 			/// This ensures that modal are on top of sections and that modals are ordered even when opened with custom priorities.
 			/// </summary>
 			public int Priority { get; }
+
+
+			public ModalViewController ModalViewController { get; }
 		}
+	}
+
+	/// <summary>
+	/// The <see cref="EventArgs"/> for the <see cref="MultiFrame.ModalClosedNatively"/> event.
+	/// </summary>
+	public class ModalClosedEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Creates a new instance of <see cref="ModalClosedEventArgs"/>.
+		/// </summary>
+		/// <param name="modalName">The closed modal's name.</param>
+		/// <param name="transitionInfo">The transition info used.</param>
+		public ModalClosedEventArgs(string modalName, UIViewControllerSectionsTransitionInfo transitionInfo)
+		{
+			ModalName = modalName;
+			TransitionInfo = transitionInfo;
+		}
+
+		/// <summary>
+		/// Gets the closed modal's name.
+		/// </summary>
+		public string ModalName { get; }
+
+		/// <summary>
+		/// Gets the transition info used.
+		/// </summary>
+		public UIViewControllerSectionsTransitionInfo TransitionInfo { get; }
 	}
 }

@@ -18,17 +18,17 @@ namespace Chinook.SectionsNavigation
 		/// <summary>The mutex to use when setting the <see cref="State"/> property to Processing.</summary>
 		private readonly object _processingStateMutex = new object();
 
+		/// <summary>
+		/// The internal <see cref="ILogger"/> for this class and its derived types.
+		/// </summary>
 		protected readonly ILogger _logger;
-		protected readonly IReadOnlyDictionary<Type, Type> _globalRegistrations;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="SectionsNavigatorBase"/>.
 		/// </summary>
 		/// <param name="defaultSections">The sections reachable by <see cref="SetActiveSection(CancellationToken, SectionsNavigatorRequest)"/> mapped by their name.</param>
-		/// <param name="globalRegistrations">Mapping of view model types to their view types.</param>
-		public SectionsNavigatorBase(IReadOnlyDictionary<string, ISectionStackNavigator> defaultSections, IReadOnlyDictionary<Type, Type> globalRegistrations)
+		public SectionsNavigatorBase(IReadOnlyDictionary<string, ISectionStackNavigator> defaultSections)
 		{
-			_globalRegistrations = globalRegistrations;
 			_logger = GetLogger();
 
 			State = new SectionsNavigatorState(
@@ -66,6 +66,21 @@ namespace Chinook.SectionsNavigation
 
 		/// <inheritdoc/>
 		public event SectionsNavigatorStateChangedEventHandler StateChanged;
+
+		/// <summary>
+		/// Gets or sets the  default transition info for SetActiveSection operations.
+		/// </summary>
+		public abstract SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; }
+
+		/// <summary>
+		/// Gets or sets the  default transition info for OpenModal operations.
+		/// </summary>
+		public abstract SectionsTransitionInfo DefaultOpenModalTransitionInfo { get; set; }
+
+		/// <summary>
+		/// Gets or sets the  default transition info for CloseModal operations.
+		/// </summary>
+		public abstract SectionsTransitionInfo DefaultCloseModalTransitionInfo { get; set; }
 
 		/// <inheritdoc/>
 		public async Task<IModalStackNavigator> OpenModal(CancellationToken ct, SectionsNavigatorRequest request)
@@ -116,12 +131,13 @@ namespace Chinook.SectionsNavigation
 					throw new ArgumentException($"Can't open new modal named '{modalName}' because another modal already exists with that name.", paramName: $"{nameof(request)}.{nameof(SectionsNavigatorRequest.ModalName)}");
 				}
 
-				var modalNavigator = await CreateModalNavigator(modalPriority, modalName);
+				var transitionInfo = request.TransitionInfo ?? DefaultOpenModalTransitionInfo;
+				var modalNavigator = await CreateModalNavigator(modalPriority, modalName, transitionInfo);
 				await modalNavigator.Navigate(CancellationToken.None, request.NewModalStackNavigationRequest);
 
 				var isTopModal = !State.Modals.Any() || modalPriority > State.Modals.Max(m => m.Priority);
 
-				await InnerOpenModal(modalNavigator, isTopModal);
+				await InnerOpenModal(modalNavigator, isTopModal, transitionInfo);
 
 				State = new SectionsNavigatorState(
 					sections: State.Sections,
@@ -148,9 +164,9 @@ namespace Chinook.SectionsNavigation
 				throw;
 			}
 
-			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name)
+			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name, SectionsTransitionInfo transitionInfo)
 			{
-				var singleStackNavigator = await CreateStackNavigator(name, priority, _globalRegistrations);
+				var singleStackNavigator = await CreateStackNavigator(name, priority, transitionInfo);
 				var decoratedNavigator = new SectionStackNavigator(singleStackNavigator, name, isModal: true, priority);
 
 				decoratedNavigator.StateChanged += OnSectionStateChanged;
@@ -173,7 +189,8 @@ namespace Chinook.SectionsNavigation
 					sectionName: navigator.IsModal ? null : navigator.Name,
 					modalName: navigator.IsModal ? navigator.Name : null,
 					modalPriority: navigator.Priority,
-					newModalStackNavigationRequest: null
+					newModalStackNavigationRequest: null,
+					transitionInfo: null
 				);
 
 				// We don't use the lock for HandleSectionRequest requests because the effect is instantaneous.
@@ -187,14 +204,15 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// This method is reponsible to create a new instance implementing <see cref="IStackNavigator"/>, adding views to UI tree, etc.
 		/// </summary>
-		protected abstract Task<IStackNavigator> CreateStackNavigator(string name, int priority, IReadOnlyDictionary<Type, Type> registrations);
+		protected abstract Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsTransitionInfo transitionInfo);
 
 		/// <summary>
 		/// Implementors must override this method to typically update the View layer.
 		/// </summary>
 		/// <param name="navigator">The modal navigator being opened.</param>
 		/// <param name="isTopModal">Whether the new modal is the top-most one. This is false when a modal opens with a lower priority than the active modal.</param>
-		protected abstract Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal);
+		/// <param name="transitionInfo">The transition info for this operation.</param>
+		protected abstract Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsTransitionInfo transitionInfo);
 
 		/// <inheritdoc/>
 		public async Task<ISectionStackNavigator> SetActiveSection(CancellationToken ct, SectionsNavigatorRequest request)
@@ -246,7 +264,7 @@ namespace Chinook.SectionsNavigation
 				if (State.Sections.TryGetValue(request.SectionName, out var nextSection))
 				{
 					var previousSection = State.ActiveSection;
-					await InnerSetActiveSection(previousSection, nextSection);
+					await InnerSetActiveSection(previousSection, nextSection, request.TransitionInfo ?? DefaultSetActiveSectionTransitionInfo);
 
 					State = new SectionsNavigatorState(
 						sections: State.Sections,
@@ -284,7 +302,8 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="previousSection">The section that was previously active.</param>
 		/// <param name="nextsection">The section will be the active one.</param>
-		protected abstract Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection);
+		/// <param name="transitionInfo">The transition info for this operation.</param>
+		protected abstract Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection, SectionsTransitionInfo transitionInfo);
 
 		/// <inheritdoc/>
 		public async Task CloseModal(CancellationToken ct, SectionsNavigatorRequest request)
@@ -331,7 +350,7 @@ namespace Chinook.SectionsNavigation
 				var modalNavigator = State.Modals.FirstOrDefault(m => m.Name == request.ModalName) ?? State.Modals.LastOrDefault(m => m.Priority == (request.ModalPriority ?? m.Priority));
 				if (modalNavigator != null)
 				{
-					await InnerCloseModal(modalNavigator);
+					await InnerCloseModal(modalNavigator, request.TransitionInfo ?? DefaultCloseModalTransitionInfo);
 
 					// We dispose the navigator before calling clear, so that we don't report the clear event.
 					modalNavigator.Dispose();
@@ -372,7 +391,8 @@ namespace Chinook.SectionsNavigation
 		/// This method is responsible for changing any UI, play animations, release View references, etc.
 		/// </summary>
 		/// <param name="modalToClose">The modal section to close.</param>
-		protected abstract Task InnerCloseModal(IModalStackNavigator modalToClose);
+		/// <param name="transitionInfo">The transition info for this operation.</param>
+		protected abstract Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsTransitionInfo transitionInfo);
 
 		private static IReadOnlyList<IModalStackNavigator> ImmutableOrderedAdd(IReadOnlyList<IModalStackNavigator> list, IModalStackNavigator item)
 		{

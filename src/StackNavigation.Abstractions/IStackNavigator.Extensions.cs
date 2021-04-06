@@ -50,38 +50,38 @@ namespace Chinook.StackNavigation
 		/// Navigates forward and clears the navigator's stack.
 		/// </summary>
 		/// <typeparam name="TViewModel"></typeparam>
-		/// <param name="controller"></param>
+		/// <param name="navigator"></param>
 		/// <param name="ct"></param>
 		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
 		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
 		/// <returns>The instance of the newly</returns>
-		public static async Task<TViewModel> NavigateAndClear<TViewModel>(this IStackNavigator controller, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
+		public static async Task<TViewModel> NavigateAndClear<TViewModel>(this IStackNavigator navigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
 			where TViewModel : INavigableViewModel
 		{
-			return (TViewModel)await controller.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition, clearBackStack: true));
+			return (TViewModel)await navigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition, clearBackStack: true));
 		}
 
 		/// <summary>
 		/// Navigates forward.
 		/// </summary>
 		/// <typeparam name="TViewModel"></typeparam>
-		/// <param name="controller"></param>
+		/// <param name="navigator"></param>
 		/// <param name="ct"></param>
 		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
 		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
 		/// <returns>The instance of the newly</returns>
-		public static async Task<TViewModel> Navigate<TViewModel>(this IStackNavigator controller, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
+		public static async Task<TViewModel> Navigate<TViewModel>(this IStackNavigator navigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
 			where TViewModel : INavigableViewModel
 		{
-			return (TViewModel)await controller.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition));
+			return (TViewModel)await navigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition));
 		}
 
 		/// <summary>
 		/// Removes the previous ViewModel from this <see cref="IStackNavigator"/>' stack.
 		/// </summary>
-		public static async Task RemovePrevious(this IStackNavigator controller, CancellationToken ct)
+		public static async Task RemovePrevious(this IStackNavigator navigator, CancellationToken ct)
 		{
-			await controller.RemoveEntries(ct, new[] { controller.State.Stack.Count - 2 });
+			await navigator.RemoveEntries(ct, new[] { navigator.State.Stack.Count - 2 });
 		}
 
 		/// <summary>
