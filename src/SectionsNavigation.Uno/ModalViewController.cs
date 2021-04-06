@@ -45,10 +45,10 @@ namespace Chinook.SectionsNavigation
 		public string ModalName { get; }
 
 		/// <summary>
-		/// The <see cref="UIViewControllerTransitionInfo"/> used when opening this modal.
+		/// The <see cref="UIViewControllerSectionsTransitionInfo"/> used when opening this modal.
 		/// This is reused for the closing transition info when closing natively.
 		/// </summary>
-		public UIViewControllerTransitionInfo OpeningTransitionInfo { get; private set; }
+		public UIViewControllerSectionsTransitionInfo OpeningTransitionInfo { get; private set; }
 
 		/// <summary>
 		/// This event is raised when the UIViewController was closed natively, meaning that the <see cref="ISectionsNavigator"/> was not responsible for the close operation.
@@ -62,7 +62,7 @@ namespace Chinook.SectionsNavigation
 		/// Opens this UIViewController.
 		/// </summary>
 		/// <param name="transitionInfo">The transition info affecting the native animation.</param>
-		public async Task Open(UIViewControllerTransitionInfo transitionInfo)
+		public async Task Open(UIViewControllerSectionsTransitionInfo transitionInfo)
 		{
 			OpeningTransitionInfo = transitionInfo;
 #if __IOS__
@@ -85,7 +85,7 @@ namespace Chinook.SectionsNavigation
 		/// Closes this UIViewController.
 		/// </summary>
 		/// <param name="transitionInfo">The transition info affecting the native animation.</param>
-		public async Task Close(UIViewControllerTransitionInfo transitionInfo)
+		public async Task Close(UIViewControllerSectionsTransitionInfo transitionInfo)
 		{
 #if __IOS__
 			if (_wasClosedNatively)
@@ -103,7 +103,7 @@ namespace Chinook.SectionsNavigation
 		}
 
 #if __IOS__
-		private void SetTransitionInfo(UIViewControllerTransitionInfo transitionInfo)
+		private void SetTransitionInfo(UIViewControllerSectionsTransitionInfo transitionInfo)
 		{
 			ModalInPresentation = !transitionInfo.AllowDismissFromGesture;
 			ModalPresentationStyle = transitionInfo.ModalPresentationStyle;

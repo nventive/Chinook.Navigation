@@ -26,7 +26,7 @@ namespace Chinook.SectionsNavigation
 		/// <param name="multiFrame">The <see cref="MultiFrame"/> hosting the views.</param>
 		/// <param name="globalRegistrations">The dictionary of view model types mapping to their page type.</param>
 		public FrameSectionsNavigator(MultiFrame multiFrame, IReadOnlyDictionary<Type, Type> globalRegistrations)
-			: base(GetDefaultControllers(multiFrame, globalRegistrations))
+			: base(GetDefaultSections(multiFrame, globalRegistrations))
 		{
 			_multiFrame = multiFrame;
 			_globalRegistrations = globalRegistrations;
@@ -62,7 +62,7 @@ namespace Chinook.SectionsNavigation
 			}
 		}
 
-		private static IReadOnlyDictionary<string, ISectionStackNavigator> GetDefaultControllers(MultiFrame multiFrame, IReadOnlyDictionary<Type, Type> globalRegistrations)
+		private static IReadOnlyDictionary<string, ISectionStackNavigator> GetDefaultSections(MultiFrame multiFrame, IReadOnlyDictionary<Type, Type> globalRegistrations)
 		{
 			return multiFrame.SectionsFrameNames.ToDictionary<string, string, ISectionStackNavigator>(
 				keySelector: n => n,
@@ -73,22 +73,22 @@ namespace Chinook.SectionsNavigation
 		private CoreDispatcher Dispatcher => _multiFrame.Dispatcher;
 
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; } = FrameSectionsNavigatorTransitionInfo.FadeInOrFadeOut;
+		public override SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; } = FrameSectionsTransitionInfo.FadeInOrFadeOut;
 		
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultOpenModalTransitionInfo { get; set; } =
+		public override SectionsTransitionInfo DefaultOpenModalTransitionInfo { get; set; } =
 #if __IOS__
-			FrameSectionsNavigatorTransitionInfo.NativeiOSModal;
+			FrameSectionsTransitionInfo.NativeiOSModal;
 #else
-			FrameSectionsNavigatorTransitionInfo.SlideUp;
+			FrameSectionsTransitionInfo.SlideUp;
 #endif
 		
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultCloseModalTransitionInfo { get; set; } =
+		public override SectionsTransitionInfo DefaultCloseModalTransitionInfo { get; set; } =
 #if __IOS__
-			FrameSectionsNavigatorTransitionInfo.NativeiOSModal;
+			FrameSectionsTransitionInfo.NativeiOSModal;
 #else
-			FrameSectionsNavigatorTransitionInfo.SlideDown;
+			FrameSectionsTransitionInfo.SlideDown;
 #endif
 
 		/// <inheritdoc/>
@@ -98,10 +98,10 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override async Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsNavigatorTransitionInfo transitionInfo) // Runs on background thread
+		protected override async Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsTransitionInfo transitionInfo) // Runs on background thread
 		{
 			var frame = default(Frame);
-			var transitionInfoType = ((FrameSectionsNavigatorTransitionInfo)transitionInfo).Type;
+			var transitionInfoType = ((FrameSectionsTransitionInfo)transitionInfo).Type;
 			await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, CreateFrameUI);
 
 			return new FrameStackNavigator(frame, _globalRegistrations);
@@ -113,12 +113,12 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override async Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override async Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsTransitionInfo transitionInfo)
 		{
 			if (isTopModal)
 			{
 				var previousNavigatorName = State.ActiveModal?.Name ?? State.ActiveSection?.Name;
-				await _multiFrame.OpenModal(previousNavigatorName, navigator.Name, (FrameSectionsNavigatorTransitionInfo)transitionInfo);
+				await _multiFrame.OpenModal(previousNavigatorName, navigator.Name, (FrameSectionsTransitionInfo)transitionInfo);
 			}
 			else
 			{
@@ -127,7 +127,7 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override async Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextSection, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override async Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextSection, SectionsTransitionInfo transitionInfo)
 		{
 			if (previousSection == null)
 			{
@@ -135,12 +135,12 @@ namespace Chinook.SectionsNavigation
 			}
 			else
 			{
-				await _multiFrame.ChangeActiveSection(previousSection.Name, nextSection.Name, (FrameSectionsNavigatorTransitionInfo)transitionInfo);				
+				await _multiFrame.ChangeActiveSection(previousSection.Name, nextSection.Name, (FrameSectionsTransitionInfo)transitionInfo);				
 			}
 		}
 
 		/// <inheritdoc/>
-		protected override async Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override async Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsTransitionInfo transitionInfo)
 		{
 			var request = State.LastRequest;
 			var isClosingHiddenModal = request.ModalPriority.HasValue
@@ -155,7 +155,7 @@ namespace Chinook.SectionsNavigation
 			}
 			else
 			{
-				await _multiFrame.CloseModal(modalToClose.Name, navigatorToRevealName, (FrameSectionsNavigatorTransitionInfo)transitionInfo);
+				await _multiFrame.CloseModal(modalToClose.Name, navigatorToRevealName, (FrameSectionsTransitionInfo)transitionInfo);
 				await _multiFrame.RemoveFrame(modalToClose.Name);
 			}
 		}		

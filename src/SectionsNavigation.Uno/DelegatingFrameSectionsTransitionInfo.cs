@@ -7,24 +7,24 @@ using Windows.UI.Xaml.Controls;
 namespace Chinook.SectionsNavigation
 {
 	/// <summary>
-	/// This <see cref="FrameSectionsNavigatorTransitionInfo"/> implementation is used to create custom animations between frames.
-	/// This class allows you to build your own animation as an async Task using <see cref="FrameTranstionDelegate"/>.
+	/// This <see cref="FrameSectionsTransitionInfo"/> implementation is used to create a custom transition between frames.
+	/// This class allows you to build your own animation as an async Task using <see cref="FrameSectionsTransitionDelegate"/>.
 	/// </summary>
-	public class FrameTransitionInfo : FrameSectionsNavigatorTransitionInfo
+	public class DelegatingFrameSectionsTransitionInfo : FrameSectionsTransitionInfo
 	{
-		private readonly FrameTranstionDelegate _frameTranstion;
+		private readonly FrameSectionsTransitionDelegate _frameTranstion;
 
 		/// <summary>
-		/// Creates a new instance of <see cref="FrameTransitionInfo"/>.
+		/// Creates a new instance of <see cref="DelegatingFrameSectionsTransitionInfo"/>.
 		/// </summary>
-		/// <param name="frameTranstion">The method describing the animation.</param>
-		public FrameTransitionInfo(FrameTranstionDelegate frameTranstion)
+		/// <param name="frameTranstion">The method describing the transition.</param>
+		public DelegatingFrameSectionsTransitionInfo(FrameSectionsTransitionDelegate frameTranstion)
 		{
 			_frameTranstion = frameTranstion;
 		}
 
 		///<inheritdoc/>
-		public override FrameSectionsNavigatorTransitionInfoTypes Type => FrameSectionsNavigatorTransitionInfoTypes.FrameBased;
+		public override FrameSectionsTransitionInfoTypes Type => FrameSectionsTransitionInfoTypes.FrameBased;
 
 		/// <summary>
 		/// Runs the transition.
@@ -47,5 +47,5 @@ namespace Chinook.SectionsNavigation
 	/// <param name="frameToShow">The <see cref="Frame"/> that must be visible after the transition.</param>
 	/// <param name="frameToShowIsAboveFrameToHide">Flag indicating whether the frame to show is above the frame to hide in their parent container.</param>
 	/// <returns>Task running the transition operation.</returns>
-	public delegate Task FrameTranstionDelegate(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide);
+	public delegate Task FrameSectionsTransitionDelegate(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide);
 }

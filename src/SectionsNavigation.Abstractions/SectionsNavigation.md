@@ -82,15 +82,32 @@ You can observe the state with the `ISectionsNavigator.StateChanged` event.
 If you invoke 2 operations simultaneously (double tap, press 2 buttons with 2 fingers, etc.), only the first will actually run.
 This is because the request state (Processing, Processed or FailedToProcess) is part of the `ISectionsNavigator.State`.
 If a request is made while another is processing, the second request is cancelled.
+This is logged as a warning.
 
 ### Background navigation
-You can navigate in sections that are not active. This is useful if you want to _prepare_ a section before entering it.
+You can navigate in sections that are not active.
+This is useful if you want to _prepare_ a section before entering it.
 
 ### Stack navigator adapter
-You can use `SectionsNavigatorToStackNavigatorAdapter` to adapt a `ISectionsNavigator` into a `IStackNavigator`. This is useful if your app mostly use the single stack pattern.
+You can use `SectionsNavigatorToStackNavigatorAdapter` to adapt a `ISectionsNavigator` into a `IStackNavigator`.
+This is useful if your app mostly use the single stack pattern.
 
-### Customize animations
-When using `FrameSectionsNavigator`, you can customize or remove the animations of the MultiFrame using `MultiFrame.Animations`.
+### Transitions and Animations
+When using `FrameSectionsNavigator`, you can customize or remove the animations using `SectionsTransitionInfo`.
+You can specify transition info per request (using `SectionsNavigatorRequest.TransitionInfo`) and globally using the following:
+- `FrameSectionsNavigator.DefaultSetActiveSectionTransitionInfo`
+- `FrameSectionsNavigator.DefaultOpenModalTransitionInfo`
+- `FrameSectionsNavigator.DefaultCloseModalTransitionInfo`
+
+There are multiple statically available built-in transition info in `FrameSectionsTransitionInfo`.
+Use `FrameSectionsTransitionInfo.SuppressTransition` to disable animations.
+You can also create custom ones using the following classes:
+- `DelegatingFrameSectionsTransitionInfo`
+  - Available on all platforms.
+  - Allows you to create a transition in an async method where you can animate using `Storyboard`.
+- `UIViewControllerTransitionInfo`
+  - Available on iOS only.
+  - Allows you to customize the native behavior (such as dismissability via gestures and animations).
 
 ### Navigation testing
 Because `BlindSectionsNavigator` doesn't require any view, you can use it in tests projects.
@@ -98,4 +115,6 @@ This allows for unit testing or integration testing of navigation scenarios.
 e.g. You could assert that the state of the navigator contains specific view models after some specific actions.
 
 ### Modals
-`ISectionsNavigator` allows you to handle multiple stacks of navigation in your app, including modals. This means you can easily handle navigation with your modals, since the modals are just in another navigation stack. For instance, the user can navigate back and forth in the modals, and background processes can navigate as needed in the pages behind the modals, without breaking the flow.
+`ISectionsNavigator` allows you to handle multiple stacks of navigation in your app, including modals.
+This means you can easily handle navigation with your modals, since the modals are just in another navigation stack.
+For instance, the user can navigate back and forth in the modals, and background processes can navigate as needed in the pages behind the modals, without breaking the flow.

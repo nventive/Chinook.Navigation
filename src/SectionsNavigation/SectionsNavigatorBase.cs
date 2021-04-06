@@ -70,17 +70,17 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Gets or sets the  default transition info for SetActiveSection operations.
 		/// </summary>
-		public abstract SectionsNavigatorTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; }
+		public abstract SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; }
 
 		/// <summary>
 		/// Gets or sets the  default transition info for OpenModal operations.
 		/// </summary>
-		public abstract SectionsNavigatorTransitionInfo DefaultOpenModalTransitionInfo { get; set; }
+		public abstract SectionsTransitionInfo DefaultOpenModalTransitionInfo { get; set; }
 
 		/// <summary>
 		/// Gets or sets the  default transition info for CloseModal operations.
 		/// </summary>
-		public abstract SectionsNavigatorTransitionInfo DefaultCloseModalTransitionInfo { get; set; }
+		public abstract SectionsTransitionInfo DefaultCloseModalTransitionInfo { get; set; }
 
 		/// <inheritdoc/>
 		public async Task<IModalStackNavigator> OpenModal(CancellationToken ct, SectionsNavigatorRequest request)
@@ -164,7 +164,7 @@ namespace Chinook.SectionsNavigation
 				throw;
 			}
 
-			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name, SectionsNavigatorTransitionInfo transitionInfo)
+			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name, SectionsTransitionInfo transitionInfo)
 			{
 				var singleStackNavigator = await CreateStackNavigator(name, priority, transitionInfo);
 				var decoratedNavigator = new SectionStackNavigator(singleStackNavigator, name, isModal: true, priority);
@@ -204,7 +204,7 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// This method is reponsible to create a new instance implementing <see cref="IStackNavigator"/>, adding views to UI tree, etc.
 		/// </summary>
-		protected abstract Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsNavigatorTransitionInfo transitionInfo);
+		protected abstract Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsTransitionInfo transitionInfo);
 
 		/// <summary>
 		/// Implementors must override this method to typically update the View layer.
@@ -212,7 +212,7 @@ namespace Chinook.SectionsNavigation
 		/// <param name="navigator">The modal navigator being opened.</param>
 		/// <param name="isTopModal">Whether the new modal is the top-most one. This is false when a modal opens with a lower priority than the active modal.</param>
 		/// <param name="transitionInfo">The transition info for this operation.</param>
-		protected abstract Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsNavigatorTransitionInfo transitionInfo);
+		protected abstract Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsTransitionInfo transitionInfo);
 
 		/// <inheritdoc/>
 		public async Task<ISectionStackNavigator> SetActiveSection(CancellationToken ct, SectionsNavigatorRequest request)
@@ -303,7 +303,7 @@ namespace Chinook.SectionsNavigation
 		/// <param name="previousSection">The section that was previously active.</param>
 		/// <param name="nextsection">The section will be the active one.</param>
 		/// <param name="transitionInfo">The transition info for this operation.</param>
-		protected abstract Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection, SectionsNavigatorTransitionInfo transitionInfo);
+		protected abstract Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection, SectionsTransitionInfo transitionInfo);
 
 		/// <inheritdoc/>
 		public async Task CloseModal(CancellationToken ct, SectionsNavigatorRequest request)
@@ -392,7 +392,7 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="modalToClose">The modal section to close.</param>
 		/// <param name="transitionInfo">The transition info for this operation.</param>
-		protected abstract Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsNavigatorTransitionInfo transitionInfo);
+		protected abstract Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsTransitionInfo transitionInfo);
 
 		private static IReadOnlyList<IModalStackNavigator> ImmutableOrderedAdd(IReadOnlyList<IModalStackNavigator> list, IModalStackNavigator item)
 		{

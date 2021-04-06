@@ -9,37 +9,37 @@ namespace Chinook.SectionsNavigation
 	/// <summary>
 	/// Represents the transition information for a <see cref="FrameSectionsNavigator"/>.
 	/// </summary>
-	public abstract class FrameSectionsNavigatorTransitionInfo : SectionsNavigatorTransitionInfo
+	public abstract class FrameSectionsTransitionInfo : SectionsTransitionInfo
 	{
 		/// <summary>
-		/// The type of <see cref="FrameSectionsNavigatorTransitionInfo"/>.
+		/// The type of <see cref="FrameSectionsTransitionInfo"/>.
 		/// </summary>
-		public abstract FrameSectionsNavigatorTransitionInfoTypes Type { get; }
+		public abstract FrameSectionsTransitionInfoTypes Type { get; }
 
 		/// <summary>
 		/// Gets the transition info for a suppressed transition. There is not visual animation when using this transition info.
 		/// </summary>
-		public static FrameTransitionInfo SuppressTransition { get; } = new FrameTransitionInfo(ExecuteSuppressTransition);
+		public static DelegatingFrameSectionsTransitionInfo SuppressTransition { get; } = new DelegatingFrameSectionsTransitionInfo(ExecuteSuppressTransition);
 
 		/// <summary>
 		/// The new frame fades in or the previous frame fades out, depending on the layering.
 		/// </summary>
-		public static FrameTransitionInfo FadeInOrFadeOut { get; } = new FrameTransitionInfo(ExecuteFadeInOrFadeOut);
+		public static DelegatingFrameSectionsTransitionInfo FadeInOrFadeOut { get; } = new DelegatingFrameSectionsTransitionInfo(ExecuteFadeInOrFadeOut);
 
 		/// <summary>
 		/// The new frame slides up, hiding the previous frame.
 		/// </summary>
-		public static FrameTransitionInfo SlideUp { get; } = new FrameTransitionInfo(ExecuteSlideUp);
+		public static DelegatingFrameSectionsTransitionInfo SlideUp { get; } = new DelegatingFrameSectionsTransitionInfo(ExecuteSlideUp);
 
 		/// <summary>
 		/// The previous frame slides down, revealing the new frame.
 		/// </summary>
-		public static FrameTransitionInfo SlideDown { get; } = new FrameTransitionInfo(ExecuteSlideDown);
+		public static DelegatingFrameSectionsTransitionInfo SlideDown { get; } = new DelegatingFrameSectionsTransitionInfo(ExecuteSlideDown);
 
 		/// <summary>
 		/// The frames are animated using a UIViewController with the default configuration.
 		/// </summary>
-		public static UIViewControllerTransitionInfo NativeiOSModal { get; } = new UIViewControllerTransitionInfo();
+		public static UIViewControllerSectionsTransitionInfo NativeiOSModal { get; } = new UIViewControllerSectionsTransitionInfo();
 
 		private static Task ExecuteSlideDown(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide)
 		{
@@ -70,19 +70,19 @@ namespace Chinook.SectionsNavigation
 	}
 
 	/// <summary>
-	/// Represents the supported types of <see cref="FrameSectionsNavigatorTransitionInfo"/>.
+	/// Represents the supported types of <see cref="FrameSectionsTransitionInfo"/>.
 	/// </summary>
-	public enum FrameSectionsNavigatorTransitionInfoTypes
+	public enum FrameSectionsTransitionInfoTypes
 	{
 		/// <summary>
 		/// The transition is applied by changing properties or animating properties of <see cref="Frame"/> objects.
-		/// This is associated with the <see cref="FrameTransitionInfo"/> class.
+		/// This is associated with the <see cref="DelegatingFrameSectionsTransitionInfo"/> class.
 		/// </summary>
 		FrameBased,
 
 		/// <summary>
 		/// The transition is applied by using the native iOS transitions offered by UIKit.
-		/// This is associated with the <see cref="UIViewControllerTransitionInfo"/> class.
+		/// This is associated with the <see cref="UIViewControllerSectionsTransitionInfo"/> class.
 		/// </summary>
 		UIViewControllerBased
 	}

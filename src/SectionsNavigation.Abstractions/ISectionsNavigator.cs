@@ -29,7 +29,7 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="ct">The cancellation token; note that cancellation is checked only at the very start of the execution.</param>
 		/// <param name="request">The request containing the section name to set as active.</param>
-		/// <returns>The active controller after the set operation.</returns>
+		/// <returns>The active section after the set operation.</returns>
 		Task<ISectionStackNavigator> SetActiveSection(CancellationToken ct, SectionsNavigatorRequest request);
 
 		/// <summary>

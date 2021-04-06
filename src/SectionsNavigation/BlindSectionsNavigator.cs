@@ -24,13 +24,13 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; }
+		public override SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; }
 		
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultOpenModalTransitionInfo { get; set; }
+		public override SectionsTransitionInfo DefaultOpenModalTransitionInfo { get; set; }
 
 		/// <inheritdoc/>
-		public override SectionsNavigatorTransitionInfo DefaultCloseModalTransitionInfo { get; set; }
+		public override SectionsTransitionInfo DefaultCloseModalTransitionInfo { get; set; }
 
 		private static IReadOnlyDictionary<string, ISectionStackNavigator> GetDefaultSections(string[] defaultSectionNames)
 		{
@@ -47,27 +47,27 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override Task<IStackNavigator> CreateStackNavigator(string name, int priority, SectionsTransitionInfo transitionInfo)
 		{
 			return Task.FromResult<IStackNavigator>(new BlindStackNavigator());
 		}
 
 		/// <inheritdoc/>
-		protected override Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override Task InnerOpenModal(IModalStackNavigator navigator, bool isTopModal, SectionsTransitionInfo transitionInfo)
 		{
 			// Don't do anything.
 			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc/>
-		protected override Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override Task InnerCloseModal(IModalStackNavigator modalToClose, SectionsTransitionInfo transitionInfo)
 		{
 			// Don't do anything.
 			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc/>
-		protected override Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection, SectionsNavigatorTransitionInfo transitionInfo)
+		protected override Task InnerSetActiveSection(ISectionStackNavigator previousSection, ISectionStackNavigator nextsection, SectionsTransitionInfo transitionInfo)
 		{
 			// Don't do anything.
 			return Task.CompletedTask;

@@ -10,7 +10,7 @@ namespace Chinook.SectionsNavigation
 	/// <remarks>
 	/// Packages implementing <see cref="ISectionsNavigator"/> should provide implementations.
 	/// </remarks>
-	public abstract class SectionsNavigatorTransitionInfo
+	public abstract class SectionsTransitionInfo
 	{
 	}
 }

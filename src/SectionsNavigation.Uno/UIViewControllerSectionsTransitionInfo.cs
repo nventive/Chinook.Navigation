@@ -8,20 +8,20 @@ using UIKit;
 namespace Chinook.SectionsNavigation
 {
 	/// <summary>
-	/// This implementation of <see cref="FrameSectionsNavigatorTransitionInfo"/> is used to animate frames using native iOS animations.
+	/// This implementation of <see cref="FrameSectionsTransitionInfo"/> is used to animate frames using native iOS animations.
 	/// This class allows you to leverage the various built-in options from UIKit.
 	/// This class is only supported on iOS.
 	/// </summary>
-	public class UIViewControllerTransitionInfo : FrameSectionsNavigatorTransitionInfo
+	public class UIViewControllerSectionsTransitionInfo : FrameSectionsTransitionInfo
 	{
 #if __IOS__
 		/// <summary>
-		/// Creates a new instance of <see cref="UIViewControllerTransitionInfo"/>.
+		/// Creates a new instance of <see cref="UIViewControllerSectionsTransitionInfo"/>.
 		/// </summary>
 		/// <param name="allowDismissFromGesture">See <see cref="AllowDismissFromGesture"/>.</param>
 		/// <param name="modalPresentationStyle">See <see cref="ModalPresentationStyle"/>.</param>
 		/// <param name="modalTransitionStyle">See <see cref="ModalTransitionStyle"/>.</param>
-		public UIViewControllerTransitionInfo(bool allowDismissFromGesture = true, UIModalPresentationStyle modalPresentationStyle = UIModalPresentationStyle.PageSheet, UIModalTransitionStyle modalTransitionStyle = UIModalTransitionStyle.CoverVertical)
+		public UIViewControllerSectionsTransitionInfo(bool allowDismissFromGesture = true, UIModalPresentationStyle modalPresentationStyle = UIModalPresentationStyle.PageSheet, UIModalTransitionStyle modalTransitionStyle = UIModalTransitionStyle.CoverVertical)
 		{
 			AllowDismissFromGesture = allowDismissFromGesture;
 			ModalPresentationStyle = modalPresentationStyle;
@@ -41,6 +41,6 @@ namespace Chinook.SectionsNavigation
 #endif
 
 		/// <inheritdoc/>
-		public override FrameSectionsNavigatorTransitionInfoTypes Type => FrameSectionsNavigatorTransitionInfoTypes.UIViewControllerBased;
+		public override FrameSectionsTransitionInfoTypes Type => FrameSectionsTransitionInfoTypes.UIViewControllerBased;
 	}
 }
