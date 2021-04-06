@@ -15,6 +15,11 @@ namespace Chinook.SectionsNavigation
 	public static class Animations
 	{
 		/// <summary>
+		/// The default duration of built-in animations, in seconds.
+		/// </summary>
+		public const double DefaultDuration = 0.250;
+
+		/// <summary>
 		/// Fades out <paramref name="frame1"/> to reveal <paramref name="frame2"/>.
 		/// </summary>
 		public static async Task FadeOutFrame1ToRevealFrame2(Frame frame1, Frame frame2)
@@ -115,7 +120,7 @@ namespace Chinook.SectionsNavigation
 			var animation = new DoubleAnimation()
 			{
 				To = 1,
-				Duration = new Duration(TimeSpan.FromSeconds(0.250)),
+				Duration = new Duration(TimeSpan.FromSeconds(DefaultDuration)),
 				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseInOut }
 			};
 
@@ -130,7 +135,7 @@ namespace Chinook.SectionsNavigation
 			var animation = new DoubleAnimation()
 			{
 				To = 0,
-				Duration = new Duration(TimeSpan.FromSeconds(0.250)),
+				Duration = new Duration(TimeSpan.FromSeconds(DefaultDuration)),
 				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseInOut }
 			};
 
@@ -145,7 +150,7 @@ namespace Chinook.SectionsNavigation
 			var animation = new DoubleAnimation()
 			{
 				To = 0,
-				Duration = new Duration(TimeSpan.FromSeconds(0.250)),
+				Duration = new Duration(TimeSpan.FromSeconds(DefaultDuration)),
 				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
 			};
 
@@ -160,7 +165,7 @@ namespace Chinook.SectionsNavigation
 			var animation = new DoubleAnimation()
 			{
 				To = translation,
-				Duration = new Duration(TimeSpan.FromSeconds(0.250)),
+				Duration = new Duration(TimeSpan.FromSeconds(DefaultDuration)),
 				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
 			};
 
