@@ -24,7 +24,6 @@ namespace Chinook.SectionsNavigation
 	{
 		private readonly Dictionary<string, FrameInfo> _frames = new Dictionary<string, FrameInfo>();
 		private readonly TaskCompletionSource<bool> _isReady = new TaskCompletionSource<bool>();
-		private readonly Stack<_UIViewController> _viewControllers = new Stack<_UIViewController>();
 
 		/// <summary>
 		/// Creates a new instance of <see cref="MultiFrame"/>.
@@ -137,18 +136,7 @@ namespace Chinook.SectionsNavigation
 							throw new InvalidOperationException("A UIViewController-based modal must be above all others.");
 						}
 
-						if (!_viewControllers.Any())
-						{
-#if __IOS__
-							_viewControllers.Push(UIKit.UIApplication.SharedApplication.KeyWindow.RootViewController);
-#else
-							_viewControllers.Push(null);
-#endif
-						}
-
-						var parentViewController = _viewControllers.Peek();
-						var modalViewController = new ModalViewController(name, frame, parentViewController);
-						_viewControllers.Push(modalViewController);
+						var modalViewController = new ModalViewController(name, frame);
 						modalViewController.ClosedNatively += OnModalViewControllerClosed;
 						frameState = new FrameInfo(frame, index, priority, modalViewController);
 
@@ -309,7 +297,6 @@ namespace Chinook.SectionsNavigation
 						break;
 					case UIViewControllerTransitionInfo viewControllerTransitionInfo:
 						await previousFrame.ModalViewController.Close(viewControllerTransitionInfo);
-						_viewControllers.Pop();
 						break;
 					default:
 						throw new InvalidOperationException($"Unsupported transition info type '{transitionInfo.GetType()}'.");

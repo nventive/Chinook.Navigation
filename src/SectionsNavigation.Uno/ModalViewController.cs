@@ -4,6 +4,7 @@ using System.Text;
 using Windows.UI.Xaml.Controls;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Microsoft.Extensions.Logging;
 #if __IOS__
 using _UIViewController = UIKit.UIViewController;
 #else
@@ -18,7 +19,6 @@ namespace Chinook.SectionsNavigation
 	public class ModalViewController : _UIViewController, IDisposable
 	{
 #if __IOS__
-		private readonly _UIViewController _parent;
 		private bool _isClosingProgrammatically;
 		private bool _wasClosedNatively;
 #endif
@@ -28,8 +28,7 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		/// <param name="modalName">The modal name.</param>
 		/// <param name="frame">The frame to wrap.</param>
-		/// <param name="parent">The parent UIViewController to use to present this controller.</param>
-		public ModalViewController(string modalName, Frame frame, _UIViewController parent)
+		public ModalViewController(string modalName, Frame frame)
 		{
 			ModalName = modalName;
 			frame.Visibility = Visibility.Visible;
@@ -37,7 +36,6 @@ namespace Chinook.SectionsNavigation
 			frame.IsHitTestVisible = true;
 #if __IOS__
 			View = frame;
-			_parent = parent;
 #endif
 		}
 
@@ -56,7 +54,9 @@ namespace Chinook.SectionsNavigation
 		/// This event is raised when the UIViewController was closed natively, meaning that the <see cref="ISectionsNavigator"/> was not responsible for the close operation.
 		/// This can happen when the user uses a native gesture.
 		/// </summary>
+#pragma warning disable CS0414 // This event is only used on iOS. However, it's still available on other platforms to simplify the code.
 		public event EventHandler ClosedNatively;
+#pragma warning restore CS0414
 
 		/// <summary>
 		/// Opens this UIViewController.
@@ -68,7 +68,14 @@ namespace Chinook.SectionsNavigation
 #if __IOS__
 			SetTransitionInfo(transitionInfo);
 
-			await _parent.PresentViewControllerAsync(this, animated: true);
+			var rootController = UIKit.UIApplication.SharedApplication.KeyWindow.RootViewController;
+
+			if(!(rootController is MostPresentedRootViewController))
+			{
+				this.Log().LogWarning($"The RootViewController isn't a {nameof(MostPresentedRootViewController)} which can cause issues with other UIViewController-related Uno features.");
+			}
+
+			await rootController.PresentViewControllerAsync(this, animated: true);
 #else
 			await Task.CompletedTask;
 #endif
