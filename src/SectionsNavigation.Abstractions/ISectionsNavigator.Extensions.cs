@@ -17,7 +17,7 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Sets the active section using the provided section name.
 		/// </summary>
-		/// <param name="sectionsNavigator"></param>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <param name="ct">The cancellation token.</param>
 		/// <param name="sectionName">The name of the section to set as active.</param>
 		/// <returns>The stack navigator of the active section.</returns>
@@ -27,10 +27,10 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <summary>
-		/// Sets the active section using the provided section name and navigates
+		/// Sets the active section using the provided section name and navigates.
 		/// </summary>
 		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
-		/// <param name="sectionsNavigator"></param>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <param name="ct">The cancellation token.</param>
 		/// <param name="sectionName">The name of the section to set as active.</param>
 		/// <param name="viewModelProvider">The method to make the view model instance. It will be invoked only if necessary.</param>
@@ -86,15 +86,20 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Closes the top-most modal.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		public static async Task CloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			await sectionsNavigator.CloseModal(ct, SectionsNavigatorRequest.GetCloseModalRequest(modalPriority: null));
 		}
 
 		/// <summary>
-		/// Gets wheter the <see cref="ISectionsNavigator"/> can navigate back or close a modal.
-		/// This is useful when dealing with hardware back buttons.
+		/// Gets whether the <see cref="ISectionsNavigator"/> can navigate back or close a modal.
 		/// </summary>
+		/// <remarks>
+		/// This is useful when dealing with hardware back buttons.
+		/// </remarks>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <returns>True if the navigator can navigate back or close a modal. False otherwise.</returns>
 		public static bool CanNavigateBackOrCloseModal(this ISectionsNavigator sectionsNavigator)
 		{
@@ -102,16 +107,19 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <summary>
-		/// Navigates back or closes a modal.
-		/// <br></br><br></br>
-		/// Priority:
+		/// Executes back action depending on top-most frame state.
+		/// </summary>
+		/// <remarks>
+		/// Priorities:
 		/// <list type="number">
-		/// <item>Navigate back within the modal, if possible.</item>
-		/// <item>Close the modal, if possible.</item>
-		/// <item>Navigate back within a section.</item>
+		/// <item>Navigates back within the modal, if possible.</item>
+		/// <item>Closes the modal, if possible.</item>
+		/// <item>Navigates back within a section.</item>
 		/// </list>
 		/// This is useful when dealing with hardware back buttons.
-		/// </summary>
+		/// </remarks>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		public static async Task NavigateBackOrCloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			if (sectionsNavigator.State.ActiveModal?.CanNavigateBack() ?? false)
@@ -134,8 +142,11 @@ namespace Chinook.SectionsNavigation
 
 		/// <summary>
 		/// Gets the active <see cref="IStackNavigator"/> of this <see cref="ISectionsNavigator"/>.
-		/// The result can be null is no navigator is active.
 		/// </summary>
+		/// <remarks>
+		/// The result can be null if no navigator is active.
+		/// </remarks>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		public static IStackNavigator GetActiveStackNavigator(this ISectionsNavigator sectionsNavigator)
 		{
 			return sectionsNavigator.State.GetActiveStackNavigator();
@@ -144,6 +155,10 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Calls <see cref="StackNavigatorExtensions.NavigateAndClear{TViewModel}(IStackNavigator, CancellationToken, Func{TViewModel}, bool)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
+		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
+		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
 		public static async Task<TViewModel> NavigateAndClear<TViewModel>(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
 			where TViewModel : INavigableViewModel
 		{
@@ -154,6 +169,10 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Calls <see cref="StackNavigatorExtensions.Navigate{TViewModel}(IStackNavigator, CancellationToken, Func{TViewModel}, bool)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
+		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
+		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
 		public static async Task<TViewModel> Navigate<TViewModel>(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
 			where TViewModel : INavigableViewModel
 		{
@@ -164,6 +183,8 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Calls <see cref="IStackNavigator.NavigateBack(CancellationToken)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		public static async Task NavigateBack(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			var navigator = GetActiveStackNavigator(sectionsNavigator);
@@ -173,6 +194,8 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Calls <see cref="StackNavigatorExtensions.RemovePrevious(IStackNavigator, CancellationToken)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		public static async Task RemovePrevious(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			var navigator = GetActiveStackNavigator(sectionsNavigator);
@@ -182,6 +205,7 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Calls <see cref="StackNavigatorExtensions.GetActiveViewModel(IStackNavigator)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		public static INavigableViewModel GetActiveViewModel(this ISectionsNavigator sectionsNavigator)
 		{
 			var navigator = GetActiveStackNavigator(sectionsNavigator);
@@ -191,8 +215,8 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Opens a new modal.
 		/// </summary>
-		/// <typeparam name="TViewModel"></typeparam>
-		/// <param name="sectionsNavigator"></param>
+		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <param name="ct"></param>
 		/// <param name="viewModelProvider">The method invoked to instanciate the new ViewModel.</param>
 		/// <param name="priority">The modal's priority.</param>

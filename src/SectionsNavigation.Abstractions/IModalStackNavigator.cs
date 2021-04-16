@@ -13,15 +13,19 @@ namespace Chinook.SectionsNavigation
 	{
 		/// <summary>
 		/// Gets the priority of the modal.
+		/// </summary>
+		/// <remarks>
 		/// The priority defines the precedence when there are multiple modals.
 		/// The modal with the highest priority is the one returned by <see cref="SectionsNavigatorState.ActiveModal"/>.
-		/// </summary>
+		/// </remarks>
 		int Priority { get; }
 
 		/// <summary>
 		/// Gets the name of this navigator stack.
-		/// This is used for mapping purposes.
 		/// </summary>
+		/// <remarks>
+		/// This is used for mapping purposes.
+		/// </remarks>
 		string Name { get; }
 	}
 }
