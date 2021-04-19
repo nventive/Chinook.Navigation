@@ -60,7 +60,11 @@ namespace Chinook.SectionsNavigation
 
 			if (!string.IsNullOrEmpty(commaSeparatedNames))
 			{
-				var names = commaSeparatedNames.Split(',');
+				var names = commaSeparatedNames.Split(',')
+					.Select(n => n.Trim())
+					.Where(n => !string.IsNullOrWhiteSpace(n))
+					.ToArray();
+
 				foreach (var name in names)
 				{
 					that.GetOrCreateFrame(name, priority: 0, transitionInfoType: FrameSectionsTransitionInfoTypes.FrameBased);
