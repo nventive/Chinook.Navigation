@@ -153,7 +153,7 @@ if (sectionsNavigator.CanNavigateBackOrCloseModal())
 ## Features
 
 ### Ready for Dependency Injection
-Navigators are made from simple interfaces. You can easily leverage containers such as Microsoft's [Generic Host](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host).
+The two navigation services are made from simple interfaces. You can easily leverage containers such as Microsoft's [Generic Host](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host).
 
 ### Ready for Integration Testing
 Because this is ViewModel-based navigation and the navigator interfaces don't reference any UI type, you can use the navigators in **Test Projects** or **Console Applications** without changing your navigation logic. Just install the `Chinook.SectionsNavigation` or `Chinook.StackNavigation` packages and use the `BlindSectionsNavigator` or `BlindStackNavigator` implementations.

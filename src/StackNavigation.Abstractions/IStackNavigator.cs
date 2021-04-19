@@ -8,14 +8,15 @@ namespace Chinook.StackNavigation
 {
 	/// <summary>
 	/// This represents a navigation controller for a single navigation stack.
-	/// In other words, it only supports forward and back navigations.
 	/// </summary>
 	public interface IStackNavigator
 	{
 		/// <summary>
 		/// Navigates forward to a new page.
-		/// When calling this method more than once in parallel, only the first invocation executes. Others are discarded.
 		/// </summary>
+		/// <remarks>
+		/// When calling this method more than once in parallel, only the first invocation executes. Others are discarded.
+		/// </remarks>
 		/// <param name="ct">The cancellation token; note that cancellation is checked only at the very start of the execution.</param>
 		/// <param name="request">The request containing the parameters navigation operation.</param>
 		/// <returns>The ViewModel instance of the active page after the navigation operation.</returns>

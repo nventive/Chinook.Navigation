@@ -15,8 +15,8 @@ namespace Chinook.StackNavigation
 	{
 		/// <summary>
 		/// Gets whether the navigator can navigate back.
-		/// To navigate back, the navigator requires at least 2 entries in its stack (including the current page).
 		/// </summary>
+		/// <param name="stackNavigator">The stack navigator.</param>
 		public static bool CanNavigateBack(this IStackNavigator stackNavigator)
 		{
 			// Can't back if you only have 1 item in the stack because the stack contains the current item.
@@ -49,9 +49,9 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Navigates forward and clears the navigator's stack.
 		/// </summary>
-		/// <typeparam name="TViewModel"></typeparam>
-		/// <param name="navigator"></param>
-		/// <param name="ct"></param>
+		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
+		/// <param name="navigator">The stack navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
 		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
 		/// <returns>The instance of the newly</returns>
@@ -64,12 +64,12 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Navigates forward.
 		/// </summary>
-		/// <typeparam name="TViewModel"></typeparam>
-		/// <param name="navigator"></param>
-		/// <param name="ct"></param>
+		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
+		/// <param name="navigator">The stack navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
 		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
-		/// <returns>The instance of the newly</returns>
+		/// <returns>The ViewModel instance of the active page after the navigation operation.</returns>
 		public static async Task<TViewModel> Navigate<TViewModel>(this IStackNavigator navigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
 			where TViewModel : INavigableViewModel
 		{
@@ -79,6 +79,8 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Removes the previous ViewModel from this <see cref="IStackNavigator"/>' stack.
 		/// </summary>
+		/// <param name="navigator">The stack navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		public static async Task RemovePrevious(this IStackNavigator navigator, CancellationToken ct)
 		{
 			await navigator.RemoveEntries(ct, new[] { navigator.State.Stack.Count - 2 });
@@ -87,25 +89,28 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Gets the ViewModel instance of the last item of this <see cref="IStackNavigator"/>'s stack.
 		/// </summary>
-		public static INavigableViewModel GetActiveViewModel(this IStackNavigator stackNavigator)
+		/// <param name="navigator">The stack navigator.</param>
+		public static INavigableViewModel GetActiveViewModel(this IStackNavigator navigator)
 		{
-			return stackNavigator.State.Stack.LastOrDefault()?.ViewModel;
+			return navigator.State.Stack.LastOrDefault()?.ViewModel;
 		}
 
 		/// <summary>
-		/// Navigates back to the ViewModel matching <typeparamref name="TPageViewModel"/>.
-		/// If no previous entry matches <typeparamref name="TPageViewModel"/>, nothing happens.
+		/// Tries to navigate back to the ViewModel matching <typeparamref name="TPageViewModel"/>.
 		/// </summary>
+		/// <remarks>
+		/// If no previous entry matches <typeparamref name="TPageViewModel"/>, nothing happens.
+		/// </remarks>
 		/// <typeparam name="TPageViewModel">The ViewModel type.</typeparam>
-		/// <param name="stackNavigator"></param>
-		/// <param name="ct"></param>
+		/// <param name="navigator">The stack navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
 		/// <returns>True if the navigate back happened. False otherwise.</returns>
-		public static async Task<bool> TryNavigateBackTo<TPageViewModel>(this IStackNavigator stackNavigator, CancellationToken ct)
+		public static async Task<bool> TryNavigateBackTo<TPageViewModel>(this IStackNavigator navigator, CancellationToken ct)
 		{
 			var logger = typeof(StackNavigatorExtensions).Log();
 
 			// Retrieve the current stack and its size
-			var stack = stackNavigator.State.Stack;
+			var stack = navigator.State.Stack;
 			var count = stack.Count;
 
 			// Retrieve the instance of the target ViewModel
@@ -120,11 +125,11 @@ namespace Chinook.StackNavigation
 				if (itemsToDelete > 0)
 				{
 					var indexesToRemove = Enumerable.Range(startIndex + 1, itemsToDelete);
-					await stackNavigator.RemoveEntries(ct, indexesToRemove);
+					await navigator.RemoveEntries(ct, indexesToRemove);
 				}
 
 				// Navigate back to the target view model
-				await stackNavigator.NavigateBack(ct);
+				await navigator.NavigateBack(ct);
 
 				return true;
 			}

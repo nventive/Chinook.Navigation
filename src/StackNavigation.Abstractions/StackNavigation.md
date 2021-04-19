@@ -1,11 +1,11 @@
 ﻿# Stack Navigation
 
-The `StackNavigation` namespace offers classes to allow **ViewModel based navigation** using a single navigation stack. (i.e. You can navigate forward or back.)
+The `Chinook.StackNavigation` namespace offers classes to allow **ViewModel based navigation** using a single navigation stack. (i.e. You can navigate forward or back.)
 
 The central point of this namespace is the [IStackNavigator](IStackNavigator.cs) interface.
 It is reponsible for both 
 - the **state** of the navigation stack (what ViewModel is active and what are the previous ones),
-- the **operations** that can change that state (such as _Navigate_ or _NavigateBack_).
+- the **operations** that can change the state (such as _Navigate_ or _NavigateBack_).
 
 ## Getting started
 
@@ -16,7 +16,7 @@ There are 2 classes available that implement `IStackNavigator`:
 - `FrameStackNavigator`
   - Use this implementation for your launchable apps (UWP, Android, iOS, etc.).
   - It requires a `Frame` that you should put at the root of your application.
-  - It accepts a mapping of your ViewModel types to your Page types. This is useful if you register all your vm and pages in one place.
+  - It accepts a mapping of your ViewModel types to your Page types. This is useful if you register all your VMs and pages in one place.
 
 ### 2. Navigate to ViewModels
 This navigation is ViewModel based. That means that ViewModels are mainly what defines the navigation.

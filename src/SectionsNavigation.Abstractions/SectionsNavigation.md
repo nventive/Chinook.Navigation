@@ -1,6 +1,6 @@
 ﻿# Sections Navigation
 
-The `SectionsNavigation` namespace offers classes to allow **ViewModel based navigation** using multiple stacks.
+The `Chinook.SectionsNavigation` namespace offers classes to allow **ViewModel based navigation** using multiple stacks.
 Those stacks can either be a _section_ or a _modal_.
 
 The central point of this namespace is the [ISectionsNavigator](ISectionsNavigator.cs) interface.
@@ -110,7 +110,7 @@ You can also create custom ones using the following classes:
   - Allows you to customize the native behavior (such as dismissability via gestures and animations).
 
 ### Navigation testing
-Because `BlindSectionsNavigator` doesn't require any view, you can use it in tests projects.
+Because `BlindSectionsNavigator` doesn't require any view, you can use it in test projects.
 This allows for unit testing or integration testing of navigation scenarios.
 e.g. You could assert that the state of the navigator contains specific view models after some specific actions.
 

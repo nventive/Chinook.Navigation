@@ -14,7 +14,7 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Gets an observable sequence that produces values whenever <see cref="IStackNavigator.StateChanged"/> is raised.
 		/// </summary>
-		/// <param name="navigator">The sections navigator.</param>
+		/// <param name="navigator">The stack navigator.</param>
 		/// <returns>An observable sequence of <see cref="EventPattern{SectionsNavigatorEventArgs}"/>.</returns>
 		public static IObservable<EventPattern<StackNavigatorEventArgs>> ObserveStateChanged(this IStackNavigator navigator)
 		{
@@ -28,7 +28,7 @@ namespace Chinook.StackNavigation
 		/// <summary>
 		/// Gets an observable sequence that produces values whenever <see cref="IStackNavigator.StateChanged"/> is raised, pushing only the <see cref="StackNavigatorEventArgs.CurrentState"/> value.
 		/// </summary>
-		/// <param name="navigator">The sections navigator.</param>
+		/// <param name="navigator">The stack navigator.</param>
 		/// <returns>An observable sequence of <see cref="StackNavigatorState"/>.</returns>
 		public static IObservable<StackNavigatorState> ObserveCurrentState(this IStackNavigator navigator)
 		{
