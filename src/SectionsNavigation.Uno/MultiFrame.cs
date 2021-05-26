@@ -234,7 +234,7 @@ namespace Chinook.SectionsNavigation
 							}
 
 							// 2. Animate the previous frame
-							await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
+							await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
 
 							// 3. Once faded out, collapse the previous frame.
 							previousFrame.Frame.Visibility = Visibility.Collapsed;
@@ -242,7 +242,7 @@ namespace Chinook.SectionsNavigation
 						else
 						{
 							// Otherwise, the next frame is displayed on top of the previous one.
-							await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
+							await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
 
 							// 5. Collapse the previous frame that is no longer visible.
 							previousFrame.Frame.Visibility = Visibility.Collapsed;
@@ -271,7 +271,7 @@ namespace Chinook.SectionsNavigation
 				switch (transitionInfo)
 				{
 					case DelegatingFrameSectionsTransitionInfo frameTransition:
-						await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, true);
+						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
 						break;
 					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
 						await nextFrame.ModalViewController.Open(viewControllerTransitionInfo);
@@ -297,7 +297,7 @@ namespace Chinook.SectionsNavigation
 				switch (transitionInfo)
 				{
 					case DelegatingFrameSectionsTransitionInfo frameTransition:
-						await frameTransition.Run(previousFrame.Frame, nextFrame.Frame, true);
+						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
 						break;
 					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
 						await previousFrame.ModalViewController.Close(viewControllerTransitionInfo);
