@@ -25,6 +25,14 @@ There are 2 types of navigators available:
 
 See how to get you instance for [StackNavigation](src/StackNavigation.Abstractions/StackNavigation.md#getting-started) or [SectionsNavigation](src/SectionsNavigation.Abstractions/SectionsNavigation.md#getting-started). Note that your code should always use the interface in order to be easily reused for integration tests.
 
+### Navigation Types 
+
+#### PageNavigation
+![image](https://user-images.githubusercontent.com/64613932/133836422-4f288ff9-20ac-4b5a-91c0-a9887e9e230e.png)
+
+#### Section Navigation
+![image](https://user-images.githubusercontent.com/64613932/133836403-4879d5b4-d791-4519-b96f-c7e6daba3937.png)
+
 ### 3. Use your Navigator
 
 There's a lot of things you can do. Here are some examples.
