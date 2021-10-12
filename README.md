@@ -19,7 +19,12 @@ await navigator.NavigateBack(ct);
 
 There are 2 types of navigators available:
 - `IStackNavigator` - Use this if your app would use a single `Frame`.
+
+   ![Section Navigation](docs/images/StackNavigation.png)
+
 - `ISectionsNavigator` - Use this if you want to use multiple frames (like sections tabs) or modals. Note that `IStackNavigator` is used as a building block by `ISectionsNavigator`. 
+
+  ![Section Navigation](docs/images/SectionNavigation.png)
 
 ### 2. Create your Navigator
 
