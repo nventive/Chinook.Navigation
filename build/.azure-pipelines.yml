@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
     - master
+    - feature/*
 pr:
   branches:
     include:

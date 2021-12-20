@@ -101,6 +101,26 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="frame1"></param>
+		/// <param name="frame2"></param>
+		/// <returns></returns>
+		public static async Task SlideFrame2RightToHideFrame1(Frame frame1, Frame frame2)
+		{
+			frame1.IsHitTestVisible = false;
+			((TranslateTransform)frame2.RenderTransform).X = frame1.ActualWidth;
+			frame2.Opacity = 1;
+			frame2.Visibility = Visibility.Visible;
+
+			var storyboard = new Storyboard();
+			AddSlideInFromBottom(storyboard, (TranslateTransform)frame2.RenderTransform);
+			await storyboard.Run();
+
+			frame2.IsHitTestVisible = true;
+		}
+
+		/// <summary>
 		/// Collapses <paramref name="frame1"/> and make <paramref name="frame2"/> visible.
 		/// </summary>
 		public static Task CollapseFrame1AndShowFrame2(Frame frame1, Frame frame2)

@@ -36,6 +36,8 @@ namespace Chinook.SectionsNavigation
 		/// </summary>
 		public static DelegatingFrameSectionsTransitionInfo SlideDown { get; } = new DelegatingFrameSectionsTransitionInfo(ExecuteSlideDown);
 
+		public static DelegatingFrameSectionsTransitionInfo LeftToRight { get;  } = new DelegatingFrameSectionsTransitionInfo(ExecuteLeftToRight);
+
 		/// <summary>
 		/// The frames are animated using a UIViewController with the default configuration.
 		/// </summary>
@@ -49,6 +51,16 @@ namespace Chinook.SectionsNavigation
 		private static Task ExecuteSlideUp(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide)
 		{
 			return Animations.SlideFrame2UpwardsToHideFrame1(frameToHide, frameToShow);
+		}
+
+		private static Task ExecuteLeftToRight(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide)
+		{
+			return Animations.SlideFrame2RightToHideFrame1(frameToHide, frameToShow);
+		}
+
+		private static Task ExecuteRightToLeft(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide)
+		{
+			return Animations.SlideFrame2RightToHideFrame1(frameToHide, frameToShow);
 		}
 
 		private static Task ExecuteFadeInOrFadeOut(Frame frameToHide, Frame frameToShow, bool frameToShowIsAboveFrameToHide)
