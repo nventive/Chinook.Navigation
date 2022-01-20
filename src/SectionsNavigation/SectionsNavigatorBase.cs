@@ -132,7 +132,7 @@ namespace Chinook.SectionsNavigation
 				}
 
 				var transitionInfo = request.TransitionInfo ?? DefaultOpenModalTransitionInfo;
-				var modalNavigator = await CreateModalNavigator(modalPriority, modalName, transitionInfo);
+				var modalNavigator = await CreateModalNavigator(modalPriority, modalName, transitionInfo, request.NewModalClosingTransitionInfo);
 				await modalNavigator.Navigate(CancellationToken.None, request.NewModalStackNavigationRequest);
 
 				var isTopModal = !State.Modals.Any() || modalPriority > State.Modals.Max(m => m.Priority);
@@ -164,10 +164,10 @@ namespace Chinook.SectionsNavigation
 				throw;
 			}
 
-			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name, SectionsTransitionInfo transitionInfo)
+			async Task<IModalStackNavigator> CreateModalNavigator(int priority, string name, SectionsTransitionInfo transitionInfo, SectionsTransitionInfo closingTransitionInfo)
 			{
 				var singleStackNavigator = await CreateStackNavigator(name, priority, transitionInfo);
-				var decoratedNavigator = new SectionStackNavigator(singleStackNavigator, name, isModal: true, priority);
+				var decoratedNavigator = new SectionStackNavigator(singleStackNavigator, name, isModal: true, priority, closingTransitionInfo);
 
 				decoratedNavigator.StateChanged += OnSectionStateChanged;
 
@@ -190,7 +190,8 @@ namespace Chinook.SectionsNavigation
 					modalName: navigator.IsModal ? navigator.Name : null,
 					modalPriority: navigator.Priority,
 					newModalStackNavigationRequest: null,
-					transitionInfo: null
+					transitionInfo: null,
+					newModalClosingTransitionInfo: null
 				);
 
 				// We don't use the lock for HandleSectionRequest requests because the effect is instantaneous.
@@ -350,7 +351,7 @@ namespace Chinook.SectionsNavigation
 				var modalNavigator = State.Modals.FirstOrDefault(m => m.Name == request.ModalName) ?? State.Modals.LastOrDefault(m => m.Priority == (request.ModalPriority ?? m.Priority));
 				if (modalNavigator != null)
 				{
-					await InnerCloseModal(modalNavigator, request.TransitionInfo ?? DefaultCloseModalTransitionInfo);
+					await InnerCloseModal(modalNavigator, request.TransitionInfo ?? modalNavigator.CloseModalTransitionInfo ?? DefaultCloseModalTransitionInfo);
 
 					// We dispose the navigator before calling clear, so that we don't report the clear event.
 					modalNavigator.Dispose();

@@ -27,5 +27,10 @@ namespace Chinook.SectionsNavigation
 		/// This is used for mapping purposes.
 		/// </remarks>
 		string Name { get; }
+
+		/// <summary>
+		/// Gets the default transition info for the future close modal operation.
+		/// </summary>
+		SectionsTransitionInfo CloseModalTransitionInfo { get; }
 	}
 }
