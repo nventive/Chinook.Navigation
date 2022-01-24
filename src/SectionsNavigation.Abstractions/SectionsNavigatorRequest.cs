@@ -130,6 +130,7 @@ namespace Chinook.SectionsNavigation
 			ModalPriority = modalPriority;
 			NewModalStackNavigationRequest = newModalStackNavigationRequest;
 			TransitionInfo = transitionInfo;
+			NewModalClosingTransitionInfo = newModalClosingTransitionInfo;
 		}
 
 		/// <summary>
