@@ -18,6 +18,7 @@ namespace Chinook.SectionsNavigation
 		///		<item><see cref="SectionsNavigatorRequest.ModalPriority"/> (Optional)</item>
 		///		<item><see cref="SectionsNavigatorRequest.NewModalStackNavigationRequest"/></item>
 		///		<item><see cref="SectionsNavigatorRequest.TransitionInfo"/> (Optional)</item>
+		///		<item><see cref="SectionsNavigatorRequest.NewModalClosingTransitionInfo"/> (Optional)</item>
 		/// </list>
 		/// </summary>
 		OpenModal,
@@ -71,7 +72,8 @@ namespace Chinook.SectionsNavigation
 			modalName: null,
 			modalPriority: null,
 			newModalStackNavigationRequest: null,
-			transitionInfo: transitionInfo
+			transitionInfo: transitionInfo,
+			newModalClosingTransitionInfo: null
 		);
 
 		/// <summary>
@@ -81,14 +83,16 @@ namespace Chinook.SectionsNavigation
 		/// <param name="modalName">The optional modal name.</param>
 		/// <param name="modalPriority">The optional modal priority.</param>
 		/// <param name="transitionInfo">The optional transition info.</param>
+		/// <param name="newModalClosingTransitionInfo">The optional transition info for the future close modal request.</param>
 		/// <returns>The newly created request.</returns>
-		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null, SectionsTransitionInfo transitionInfo = null) => new SectionsNavigatorRequest(
+		public static SectionsNavigatorRequest GetOpenModalRequest(StackNavigatorRequest newModalStackNavigationRequest, string modalName = null, int? modalPriority = null, SectionsTransitionInfo transitionInfo = null, SectionsTransitionInfo newModalClosingTransitionInfo = null) => new SectionsNavigatorRequest(
 			SectionsNavigatorRequestType.OpenModal,
 			sectionName: null,
 			modalName: modalName,
 			modalPriority: modalPriority,
 			newModalStackNavigationRequest: newModalStackNavigationRequest,
-			transitionInfo: transitionInfo
+			transitionInfo: transitionInfo,
+			newModalClosingTransitionInfo: newModalClosingTransitionInfo
 		);
 
 		/// <summary>
@@ -104,7 +108,8 @@ namespace Chinook.SectionsNavigation
 			modalName: modalName,
 			modalPriority: modalPriority,
 			newModalStackNavigationRequest: null,
-			transitionInfo: transitionInfo
+			transitionInfo: transitionInfo,
+			newModalClosingTransitionInfo: null
 		);
 
 		/// <summary>
@@ -116,7 +121,8 @@ namespace Chinook.SectionsNavigation
 		/// <param name="modalPriority">The modal priority associated to this request.</param>
 		/// <param name="newModalStackNavigationRequest">The <see cref="StackNavigatorRequest"/> associated to this request.</param>
 		/// <param name="transitionInfo">The transition info of this request.</param>
-		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest, SectionsTransitionInfo transitionInfo)
+		/// <param name="newModalClosingTransitionInfo">The default transiton info of the future close modal request.</param>
+		public SectionsNavigatorRequest(SectionsNavigatorRequestType requestType, string sectionName, string modalName, int? modalPriority, StackNavigatorRequest newModalStackNavigationRequest, SectionsTransitionInfo transitionInfo, SectionsTransitionInfo newModalClosingTransitionInfo)
 		{
 			RequestType = requestType;
 			SectionName = sectionName;
@@ -124,6 +130,7 @@ namespace Chinook.SectionsNavigation
 			ModalPriority = modalPriority;
 			NewModalStackNavigationRequest = newModalStackNavigationRequest;
 			TransitionInfo = transitionInfo;
+			NewModalClosingTransitionInfo = newModalClosingTransitionInfo;
 		}
 
 		/// <summary>
@@ -165,6 +172,14 @@ namespace Chinook.SectionsNavigation
 		/// Gets the <see cref="TransitionInfo"/> for the operation.
 		/// </summary>
 		public SectionsTransitionInfo TransitionInfo { get; }
+
+		/// <summary>
+		/// Gets the <see cref="TransitionInfo"/> for the future close modal operation of the newly created modal.
+		/// </summary>
+		/// <remarks>
+		/// The open and close transitions should be correlated so it's very useful to define the close transition as you open the modal. 
+		/// </remarks>
+		public SectionsTransitionInfo NewModalClosingTransitionInfo { get; }
 
 		/// <inheritdoc/>
 		public override string ToString()

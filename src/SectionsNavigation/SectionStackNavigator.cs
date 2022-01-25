@@ -22,12 +22,14 @@ namespace Chinook.SectionsNavigation
 		/// <param name="name">The name of this section.</param>
 		/// <param name="isModal">Flag indicating whether this section is a modal.</param>
 		/// <param name="priority">The priority of the section.</param>
-		public SectionStackNavigator(IStackNavigator inner, string name, bool isModal, int priority)
+		/// <param name="closeModalTransitionInfo">The default transition info for the close modal operation. This is only relevant for modals.</param>
+		public SectionStackNavigator(IStackNavigator inner, string name, bool isModal, int priority, SectionsTransitionInfo closeModalTransitionInfo = null)
 		{
 			_inner = inner;
 			Name = name;
 			IsModal = isModal;
 			Priority = priority;
+			CloseModalTransitionInfo = closeModalTransitionInfo;
 
 			_inner.StateChanged += OnInnerStateChanged;
 		}
@@ -50,6 +52,9 @@ namespace Chinook.SectionsNavigation
 
 		/// <inheritdoc/>
 		public StackNavigatorState State => _inner.State;
+
+		/// <inheritdoc/>
+		public SectionsTransitionInfo CloseModalTransitionInfo { get; }
 
 		/// <inheritdoc/>
 		/// <remarks>
