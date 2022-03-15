@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -95,26 +93,6 @@ namespace Chinook.SectionsNavigation
 
 			var storyboard = new Storyboard();
 			AddSlideBackToBottom(storyboard, (TranslateTransform)frame1.RenderTransform, frame2.ActualHeight);
-			await storyboard.Run();
-
-			frame2.IsHitTestVisible = true;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="frame1"></param>
-		/// <param name="frame2"></param>
-		/// <returns></returns>
-		public static async Task SlideFrame2RightToHideFrame1(Frame frame1, Frame frame2)
-		{
-			frame1.IsHitTestVisible = false;
-			((TranslateTransform)frame2.RenderTransform).X = frame1.ActualWidth;
-			frame2.Opacity = 1;
-			frame2.Visibility = Visibility.Visible;
-
-			var storyboard = new Storyboard();
-			AddSlideInFromBottom(storyboard, (TranslateTransform)frame2.RenderTransform);
 			await storyboard.Run();
 
 			frame2.IsHitTestVisible = true;
