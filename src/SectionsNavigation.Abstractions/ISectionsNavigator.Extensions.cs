@@ -29,23 +29,23 @@ namespace Chinook.SectionsNavigation
 		/// <summary>
 		/// Sets the active section using the provided section name and navigates.
 		/// </summary>
-		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
 		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <param name="ct">The cancellation token.</param>
 		/// <param name="sectionName">The name of the section to set as active.</param>
+		/// <param name="viewModelType">The type of the view model.</param>
 		/// <param name="viewModelProvider">The method to make the view model instance. It will be invoked only if necessary.</param>
-		/// <param name="returnToRoot">When this is true, the navigator will navigate back to the view model matching the type <typeparamref name="TViewModel"/>.</param>
+		/// <param name="returnToRoot">When this is true, the navigator will navigate back to the view model matching the <paramref name="viewModelType"/>.</param>
 		/// <returns>The stack navigator of the active section.</returns>
-		public static async Task<ISectionStackNavigator> SetActiveSection<TViewModel>(this ISectionsNavigator sectionsNavigator,
+		public static async Task<ISectionStackNavigator> SetActiveSection(this ISectionsNavigator sectionsNavigator,
 			CancellationToken ct,
 			string sectionName,
-			Func<TViewModel> viewModelProvider,
+			Type viewModelType,
+			Func<INavigableViewModel> viewModelProvider,
 			bool returnToRoot = false)
-			where TViewModel : INavigableViewModel
 		{
 			if (ct.IsCancellationRequested)
 			{
-				typeof(SectionsNavigatorExtensions).Log().LogWarning($"Canceled 'SetActiveSection' operation to '{typeof(TViewModel).Name}' because of cancellation token.");
+				typeof(SectionsNavigatorExtensions).Log().LogWarning($"Canceled 'SetActiveSection' operation to '{viewModelType.Name}' because of cancellation token.");
 
 				return null;
 			}
@@ -59,14 +59,14 @@ namespace Chinook.SectionsNavigation
 				// Create the default page if there's nothing in the section.
 				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true));
 			}
-			else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != typeof(TViewModel))
+			else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != viewModelType)
 			{
-				if (sectionNavigator.State.Stack.Any(e => e.ViewModel.GetType() == typeof(TViewModel)))
+				if (sectionNavigator.State.Stack.Any(e => e.ViewModel.GetType() == viewModelType))
 				{
 					// If the stack contains the root page of the section, remove all other entries and navigate back to it.
 					var indexesToRemove = sectionNavigator.State.Stack
 						.Select((entry, index) => (entry, index))
-						.Where(t => t.entry.ViewModel.GetType() != typeof(TViewModel) && t.index < sectionNavigator.State.Stack.Count - 1)
+						.Where(t => t.entry.ViewModel.GetType() != viewModelType && t.index < sectionNavigator.State.Stack.Count - 1)
 						.Select(t => t.index)
 						.ToList();
 
@@ -82,13 +82,33 @@ namespace Chinook.SectionsNavigation
 
 			return await sectionsNavigator.SetActiveSection(ct, SectionsNavigatorRequest.GetSetActiveSectionRequest(sectionName));
 		}
-
+		
 		/// <summary>
-		/// Closes the top-most modal.
+		/// Sets the active section using the provided section name and navigates.
 		/// </summary>
+		/// <typeparam name="TViewModel">The type of the view model.</typeparam>
 		/// <param name="sectionsNavigator">The sections navigator.</param>
 		/// <param name="ct">The cancellation token.</param>
-		public static async Task CloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
+		/// <param name="sectionName">The name of the section to set as active.</param>
+		/// <param name="viewModelProvider">The method to make the view model instance. It will be invoked only if necessary.</param>
+		/// <param name="returnToRoot">When this is true, the navigator will navigate back to the view model matching the type <typeparamref name="TViewModel"/>.</param>
+		/// <returns>The stack navigator of the active section.</returns>
+		public static async Task<ISectionStackNavigator> SetActiveSection<TViewModel>(this ISectionsNavigator sectionsNavigator,
+			CancellationToken ct,
+			string sectionName,
+			Func<TViewModel> viewModelProvider,
+			bool returnToRoot = false)
+			where TViewModel : INavigableViewModel
+		{
+			return await SetActiveSection(sectionsNavigator, ct, sectionName, typeof(TViewModel), () => viewModelProvider(), returnToRoot);
+		}
+
+			/// <summary>
+			/// Closes the top-most modal.
+			/// </summary>
+			/// <param name="sectionsNavigator">The sections navigator.</param>
+			/// <param name="ct">The cancellation token.</param>
+			public static async Task CloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			await sectionsNavigator.CloseModal(ct, SectionsNavigatorRequest.GetCloseModalRequest(modalPriority: null));
 		}
@@ -238,6 +258,23 @@ namespace Chinook.SectionsNavigation
 		{
 			var navigator = GetActiveStackNavigator(sectionsNavigator);
 			return navigator.GetActiveViewModel();
+		}
+
+		/// <summary>
+		/// Opens a new modal.
+		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct"></param>
+		/// <param name="viewModelType">The type of the view model.</param>
+		/// <param name="viewModelProvider">The method invoked to instanciate the new ViewModel.</param>
+		/// <param name="priority">The modal's priority.</param>
+		/// <param name="name">The modal's name.</param>
+		/// <returns>The newly created ViewModel instance.</returns>
+		public static async Task<INavigableViewModel> OpenModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, int? priority = null, string name = null)
+		{
+			var modalNavigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true), name, priority));
+			// Note that modalNavigator can be null if the OpenModal gets cancelled.
+			return modalNavigator?.GetActiveViewModel();
 		}
 
 		/// <summary>

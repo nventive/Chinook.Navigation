@@ -33,18 +33,25 @@ namespace Chinook.Navigation.Tests.Contract
 
 			// If the extension methods available in the abstraction package change their signatures, we get compilation errors here.
 
-			// Only test extensions specific to ISectionStackNavigator
+			// Only test extensions specific to ISectionsNavigator
 
 			ISectionStackNavigator sectionNavigator1 = await navigator.SetActiveSection(ct, "Section1");
 			ISectionStackNavigator sectionNavigator2 = await navigator.SetActiveSection(ct, "Section1", () => new TestVM(), true);
+			ISectionStackNavigator sectionNavigator3 = await navigator.SetActiveSection(ct, "Section1", typeof(TestVM), ProvideViewModel, true);
 
 			StackNavigation.IStackNavigator stackNavigator = navigator.GetActiveStackNavigator();
-			await navigator.OpenModal(ct, () => new TestVM(), 0, "modalName");
+			TestVM modalVM = await navigator.OpenModal(ct, () => new TestVM(), 0, "modalName");
 			bool canNavigateBackOrCloseModal = navigator.CanNavigateBackOrCloseModal();
 			await navigator.NavigateBackOrCloseModal(ct);
+			StackNavigation.INavigableViewModel modalVMUntyped = await navigator.OpenModal(ct, typeof(TestVM), ProvideViewModel, 0, "modalName");
 
 			IObservable<EventPattern<SectionsNavigatorEventArgs>> ob1 = navigator.ObserveStateChanged();
 			IObservable<SectionsNavigatorState> ob2 = navigator.ObserveCurrentState();
+
+			StackNavigation.INavigableViewModel ProvideViewModel()
+			{
+				return new TestVM();
+			}
 		}
 
 		[Fact]
