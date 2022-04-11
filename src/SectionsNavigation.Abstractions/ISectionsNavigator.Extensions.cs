@@ -153,6 +153,20 @@ namespace Chinook.SectionsNavigation
 		}
 
 		/// <summary>
+		/// Calls <see cref="StackNavigatorExtensions.NavigateAndClear(IStackNavigator, CancellationToken, Type, Func{INavigableViewModel}, bool)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
+		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
+		/// <param name="viewModelType">The ViewModel type.</param>
+		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
+		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
+		public static async Task<INavigableViewModel> NavigateAndClear(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false)
+		{
+			var navigator = GetActiveStackNavigator(sectionsNavigator);
+			return await navigator.NavigateAndClear(ct, viewModelType, viewModelProvider, suppressTransition);
+		}
+
+		/// <summary>
 		/// Calls <see cref="StackNavigatorExtensions.NavigateAndClear{TViewModel}(IStackNavigator, CancellationToken, Func{TViewModel}, bool)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
 		/// </summary>
 		/// <param name="sectionsNavigator">The sections navigator.</param>
@@ -164,6 +178,20 @@ namespace Chinook.SectionsNavigation
 		{
 			var navigator = GetActiveStackNavigator(sectionsNavigator);
 			return await navigator.NavigateAndClear(ct, viewModelProvider, suppressTransition);
+		}
+
+		/// <summary>
+		/// Calls <see cref="StackNavigatorExtensions.Navigate(IStackNavigator, CancellationToken, Type, Func{INavigableViewModel}, bool)"/> on this <see cref="ISectionsNavigator"/>'s active stack navigator.
+		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
+		/// <param name="viewModelType">The ViewModel type.</param>
+		/// <param name="viewModelProvider">The method to invoke to instanciate the ViewModel.</param>
+		/// <param name="suppressTransition">Whether to suppress the navigation transition.</param>
+		public static async Task<INavigableViewModel> Navigate(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false)
+		{
+			var navigator = GetActiveStackNavigator(sectionsNavigator);
+			return await navigator.Navigate(ct, viewModelType, viewModelProvider, suppressTransition);
 		}
 
 		/// <summary>

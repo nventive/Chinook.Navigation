@@ -28,11 +28,23 @@ namespace Chinook.SectionsNavigation
             return StackNavigatorExtensions.ProcessRequest(stackNavigator, ct, request);
         }
 
+        /// <inheritdoc cref="StackNavigatorExtensions.NavigateAndClear(IStackNavigator, CancellationToken, Type, Func{INavigableViewModel}, bool)"/>
+        public static Task<INavigableViewModel> NavigateAndClear(this IModalStackNavigator stackNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false)
+        {
+            return StackNavigatorExtensions.NavigateAndClear(stackNavigator, ct, viewModelType, viewModelProvider, suppressTransition);
+        }
+
         /// <inheritdoc cref="StackNavigatorExtensions.NavigateAndClear{TViewModel}(IStackNavigator, CancellationToken, Func{TViewModel}, bool)"/>
         public static Task<TViewModel> NavigateAndClear<TViewModel>(this IModalStackNavigator stackNavigator, CancellationToken ct, Func<TViewModel> viewModelProvider, bool suppressTransition = false)
             where TViewModel : INavigableViewModel
         {
             return StackNavigatorExtensions.NavigateAndClear(stackNavigator, ct, viewModelProvider, suppressTransition);
+        }
+
+        /// <inheritdoc cref="StackNavigatorExtensions.Navigate(IStackNavigator, CancellationToken, Type, Func{INavigableViewModel}, bool)"/>
+        public static Task<INavigableViewModel> Navigate(this IModalStackNavigator stackNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false)
+        {
+            return StackNavigatorExtensions.Navigate(stackNavigator, ct, viewModelType, viewModelProvider, suppressTransition);
         }
 
         /// <inheritdoc cref="StackNavigatorExtensions.Navigate{TViewModel}(IStackNavigator, CancellationToken, Func{TViewModel}, bool)"/>
@@ -52,6 +64,12 @@ namespace Chinook.SectionsNavigation
 		public static INavigableViewModel GetActiveViewModel(this IModalStackNavigator stackNavigator)
 		{
             return StackNavigatorExtensions.GetActiveViewModel(stackNavigator);
+        }
+
+        /// <inheritdoc cref="StackNavigatorExtensions.TryNavigateBackTo(IStackNavigator, CancellationToken, Type)"/>
+		public static Task<bool> TryNavigateBackTo(this IModalStackNavigator stackNavigator, CancellationToken ct, Type viewModelType)
+        {
+            return StackNavigatorExtensions.TryNavigateBackTo(stackNavigator, ct, viewModelType);
         }
 
         /// <inheritdoc cref="StackNavigatorExtensions.TryNavigateBackTo{TPageViewModel}(IStackNavigator, CancellationToken)"/>

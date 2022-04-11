@@ -14,6 +14,15 @@ namespace Chinook.StackNavigation
 
 	public class StackNavigatorRequest
 	{
+		public static StackNavigatorRequest GetNavigateRequest(Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false, bool clearBackStack = false) => new StackNavigatorRequest(
+			StackNavigatorRequestType.NavigateForward,
+			viewModelType: viewModelType,
+			viewType: null,
+			viewModelProvider: () => viewModelProvider(),
+			suppressTransitions: suppressTransition,
+			clearBackStack: clearBackStack,
+			entryIndexesToRemove: null);
+
 		public static StackNavigatorRequest GetNavigateRequest<TViewModel>(Func<TViewModel> viewModelProvider, bool suppressTransition = false, bool clearBackStack = false) where TViewModel : INavigableViewModel => new StackNavigatorRequest(
 			StackNavigatorRequestType.NavigateForward,
 			viewModelType: typeof(TViewModel),
