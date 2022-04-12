@@ -40,6 +40,9 @@ namespace Chinook.Navigation.Tests.Contract
 			TestVM vmAfterNavigate = await navigator.Navigate(ct, () => new TestVM(), suppressTransition: false);
 			TestVM vmAfterNavigateAndClear = await navigator.NavigateAndClear(ct, () => new TestVM(), suppressTransition: false);
 
+			INavigableViewModel vmAfterNavigateUntyped = await navigator.Navigate(ct, ProvideVM, suppressTransition: false);
+			INavigableViewModel vmAfterNavigateAndClearUntyped = await navigator.NavigateAndClear(ct, ProvideVM, suppressTransition: false);
+
 			INavigableViewModel vm = navigator.GetActiveViewModel();
 			bool canGoBack = navigator.CanNavigateBack();
 
@@ -49,11 +52,17 @@ namespace Chinook.Navigation.Tests.Contract
 			await navigator.RemovePrevious(ct);
 
 			bool didNavigateBack = await navigator.TryNavigateBackTo<TestVM>(ct);
+			bool didNavigateBackUntyped = await navigator.TryNavigateBackTo(ct, typeof(TestVM));
 
 			await navigator.ProcessRequest(ct, StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), false, false));
 
 			IObservable<EventPattern<StackNavigatorEventArgs>> ob1 = navigator.ObserveStateChanged();
 			IObservable<StackNavigatorState> ob2 = navigator.ObserveCurrentState();
+
+			INavigableViewModel ProvideVM()
+			{
+				return new TestVM();
+			}
 		}
 
 		private class TestVM : INavigableViewModel
