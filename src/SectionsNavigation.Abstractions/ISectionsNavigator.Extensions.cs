@@ -57,7 +57,7 @@ namespace Chinook.SectionsNavigation
 			if (sectionNavigator.State.Stack.LastOrDefault() == null)
 			{
 				// Create the default page if there's nothing in the section.
-				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true));
+				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true));
 			}
 			else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != viewModelType)
 			{
