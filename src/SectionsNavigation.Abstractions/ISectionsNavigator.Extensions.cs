@@ -43,46 +43,64 @@ namespace Chinook.SectionsNavigation
 			Func<INavigableViewModel> viewModelProvider,
 			bool returnToRoot = false)
 		{
-			if (ct.IsCancellationRequested)
-			{
-				typeof(SectionsNavigatorExtensions).Log().LogWarning($"Canceled 'SetActiveSection' operation to '{viewModelType.Name}' because of cancellation token.");
+			var processor = sectionsNavigator as ISectionsNavigatorProcessor;
 
+			if (processor == null)
+			{
+				throw new ArgumentException($"The provided navigator must implement {typeof(ISectionsNavigatorProcessor)} to support this method.", nameof(sectionsNavigator));
+			}
+
+			var operation = processor.GetOperation("SetActiveSectionWithAutoNavigation");
+			if (processor.TryBeginOperationScope(operation, out var scope))
+			{
+				using (scope)
+				{
+					if (ct.IsCancellationRequested)
+					{
+						typeof(SectionsNavigatorExtensions).Log().LogWarning($"Canceled 'SetActiveSection' operation to '{viewModelType.Name}' because of cancellation token.");
+
+						return null;
+					}
+
+					// No cancellation beyond this point.
+					ct = CancellationToken.None;
+
+					var sectionNavigator = sectionsNavigator.State.Sections[sectionName];
+					if (sectionNavigator.State.Stack.LastOrDefault() == null)
+					{
+						// Create the default page if there's nothing in the section.
+						await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true));
+					}
+					else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != viewModelType)
+					{
+						if (sectionNavigator.State.Stack.Any(e => e.ViewModel.GetType() == viewModelType))
+						{
+							// If the stack contains the root page of the section, remove all other entries and navigate back to it.
+							var indexesToRemove = sectionNavigator.State.Stack
+								.Select((entry, index) => (entry, index))
+								.Where(t => t.entry.ViewModel.GetType() != viewModelType && t.index < sectionNavigator.State.Stack.Count - 1)
+								.Select(t => t.index)
+								.ToList();
+
+							await sectionNavigator.RemoveEntries(ct, indexesToRemove);
+							await sectionNavigator.NavigateBack(ct);
+						}
+						else
+						{
+							// If the section root page isn't in the stack, clear everything and navigate to it.
+							await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true, clearBackStack: true));
+						}
+					}
+
+					return await processor.SetActiveSection(ct, SectionsNavigatorRequest.GetSetActiveSectionRequest(sectionName), operation);
+				}
+			}
+			else
+			{
 				return null;
 			}
-
-			// No cancellation beyond this point.
-			ct = CancellationToken.None;
-
-			var sectionNavigator = sectionsNavigator.State.Sections[sectionName];
-			if (sectionNavigator.State.Stack.LastOrDefault() == null)
-			{
-				// Create the default page if there's nothing in the section.
-				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true));
-			}
-			else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != viewModelType)
-			{
-				if (sectionNavigator.State.Stack.Any(e => e.ViewModel.GetType() == viewModelType))
-				{
-					// If the stack contains the root page of the section, remove all other entries and navigate back to it.
-					var indexesToRemove = sectionNavigator.State.Stack
-						.Select((entry, index) => (entry, index))
-						.Where(t => t.entry.ViewModel.GetType() != viewModelType && t.index < sectionNavigator.State.Stack.Count - 1)
-						.Select(t => t.index)
-						.ToList();
-
-					await sectionNavigator.RemoveEntries(ct, indexesToRemove);
-					await sectionNavigator.NavigateBack(ct);
-				}
-				else
-				{
-					// If the section root page isn't in the stack, clear everything and navigate to it.
-					await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true, clearBackStack: true));
-				}
-			}
-
-			return await sectionsNavigator.SetActiveSection(ct, SectionsNavigatorRequest.GetSetActiveSectionRequest(sectionName));
 		}
-		
+
 		/// <summary>
 		/// Sets the active section using the provided section name and navigates.
 		/// </summary>
@@ -103,12 +121,12 @@ namespace Chinook.SectionsNavigation
 			return await SetActiveSection(sectionsNavigator, ct, sectionName, typeof(TViewModel), () => viewModelProvider(), returnToRoot);
 		}
 
-			/// <summary>
-			/// Closes the top-most modal.
-			/// </summary>
-			/// <param name="sectionsNavigator">The sections navigator.</param>
-			/// <param name="ct">The cancellation token.</param>
-			public static async Task CloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
+		/// <summary>
+		/// Closes the top-most modal.
+		/// </summary>
+		/// <param name="sectionsNavigator">The sections navigator.</param>
+		/// <param name="ct">The cancellation token.</param>
+		public static async Task CloseModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct)
 		{
 			await sectionsNavigator.CloseModal(ct, SectionsNavigatorRequest.GetCloseModalRequest(modalPriority: null));
 		}

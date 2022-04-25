@@ -29,7 +29,7 @@ namespace Chinook.Navigation.Tests.Contract
 		public async Task Extended_interface_contract_changes_can_be_detected()
 		{
 			var ct = CancellationToken.None;
-			var navigator = new BlindSectionsNavigator("Section1", "Section2");
+			var navigator = new ConcurrentProcessorSectionsNavigatorDecorator(new BlindSectionsNavigator("Section1", "Section2"));
 
 			// If the extension methods available in the abstraction package change their signatures, we get compilation errors here.
 
