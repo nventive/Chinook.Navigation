@@ -9,10 +9,15 @@
     <Description>Chinook.SectionsNavigation.Abstractions</Description>
     <PackageId>Chinook.SectionsNavigation.Abstractions</PackageId>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StackNavigation.Abstractions\StackNavigation.Abstractions.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>

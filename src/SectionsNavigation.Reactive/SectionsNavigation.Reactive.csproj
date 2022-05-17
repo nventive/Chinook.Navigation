@@ -9,12 +9,16 @@
     <Description>Chinook.SectionsNavigation.Reactive</Description>
     <PackageId>Chinook.SectionsNavigation.Reactive</PackageId>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <LangVersion>8.0</LangVersion>
-
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="4.4.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
