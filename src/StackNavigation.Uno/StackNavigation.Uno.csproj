@@ -11,6 +11,10 @@
     <Description>Chinook.StackNavigation.Uno</Description>
     <PackageId>Chinook.StackNavigation.Uno</PackageId>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -23,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
