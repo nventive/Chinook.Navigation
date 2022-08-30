@@ -1,41 +1,36 @@
 ﻿steps:
-## Install .netcore runtime required by GitVersion@5
-- task: UseDotNet@2
-  inputs:
-    packageType: 'runtime'
-    version: '2.1.0'
-    installationPath: '$(Agent.ToolsDirectory)/dotnet'
 
-- task: GitVersion@5
+- task: gitversion/setup@0
   inputs:
-    runtime: 'core'
+    versionSpec: '5.10.1'
+  displayName: 'Install GitVersion'
+
+- task: gitversion/execute@0
+  inputs:
     useConfigFile: true
-    configFilePath: build/gitversion.yml
+    configFilePath: $(Build.SourcesDirectory)/build/gitversion.yml
   displayName: 'Calculate version'
 
-- task: NuGetToolInstaller@1
-  displayName: 'Install NuGet $(NUGET_VERSION)'
+- task: NuGetAuthenticate@1
   inputs:
-    versionSpec: $(NUGET_VERSION)
-    checkLatest: false
-
-- task: VisualStudioTestPlatformInstaller@1
-  condition: and(succeeded(), eq(variables['ApplicationConfiguration'], 'Release_Packages'))
-  inputs:
-    packageFeedSelector: 'nugetOrg'
-    versionSelector: 'specificVersion'
-    testPlatformVersion: $(VSTEST_PLATFORM_VERSION)
-
-- task: NuGetCommand@2
+    forceReinstallCredentialProvider: true
+    
+- task: MSBuild@1
   displayName: 'Restore solution packages'
   inputs:
-    command: restore
     solution: $(Build.SourcesDirectory)/$(SolutionFileName)
-    selectOrConfig: select
-    feedRestore: nventive
-    includeNuGetOrg: true
-    verbosityRestore: Normal
-    noCache: true
+    msbuildLocationMethod: version
+    msbuildVersion: latest
+    msbuildArchitecture: x86
+    msbuildArguments: >
+      /t:restore
+    configuration: $(ApplicationConfiguration)
+    platform: $(ApplicationPlatform)
+    clean: false
+    maximumCpuCount: true
+    restoreNugetPackages: false
+    logProjectEvents: false
+    createLogFile: false
 
 - task: MSBuild@1
   displayName: 'Build solution in $(ApplicationConfiguration) | $(ApplicationPlatform)'
@@ -55,16 +50,31 @@
       /p:PackageVersion=$(GitVersion.SemVer) 
       /p:ContinuousIntegrationBuild=true
 
-- task: VSTest@2
+- script: >
+    dotnet test $(Build.SourcesDirectory)/$(SolutionFileName)
+    /p:Configuration=$(ApplicationConfiguration)
+    /p:CollectCoverage=true 
+    /p:CoverletOutputFormat=cobertura
+    /p:CoverletOutput=$(Build.SourcesDirectory)/coverage
+    /p:ExcludeByFile="**/*.g.cs"
+    --logger trx
+    --no-build
   displayName: 'Run tests'
-  condition: and(succeeded(), eq(variables['ApplicationConfiguration'], 'Release_Packages'))
+  condition: and(succeeded(), eq(variables['ApplicationPlatform'], 'NuGet'))
+
+- task: PublishTestResults@2
+  displayName: 'Publish test results'
+  condition: succeededOrFailed()
   inputs:
-    testAssemblyVer2: |
-      **\*tests*.dll
-      !**\obj\**
-    vstestLocationMethod: version
-    vsTestVersion: "latest"
-    testSelector: testAssemblies
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+
+- task: PublishCodeCoverageResults@1
+  displayName: Publish code coverage report
+  condition: and(succeededOrFailed(), eq(variables['ApplicationPlatform'], 'NuGet'))
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: "$(Build.SourcesDirectory)/coverage.cobertura.xml"
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact $(ApplicationConfiguration)'

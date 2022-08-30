@@ -1,24 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <RootNamespace>Chinook.SectionsNavigation</RootNamespace>
-    <Authors>nventive</Authors>
-    <Company>nventive</Company>
-    <AssemblyName>Chinook.SectionsNavigation</AssemblyName>
-    <Description>Chinook.SectionsNavigation</Description>
-    <PackageId>Chinook.SectionsNavigation</PackageId>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<RootNamespace>Chinook.SectionsNavigation</RootNamespace>
+		<Authors>nventive</Authors>
+		<Company>nventive</Company>
+		<AssemblyName>Chinook.SectionsNavigation</AssemblyName>
+		<PackageId>Chinook.SectionsNavigation</PackageId>
+		<Description>Unified cross-platform tools to perform ViewModel-based navigation.</Description>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>navigation;mvvm;xamarin;ios;android;uwp;chinook</PackageTags>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SectionsNavigation.Abstractions\SectionsNavigation.Abstractions.csproj" />
-    <ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-  </ItemGroup>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SectionsNavigation.Abstractions\SectionsNavigation.Abstractions.csproj" />
+		<ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+	</ItemGroup>
 
 </Project>
