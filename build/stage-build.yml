@@ -60,7 +60,7 @@
     --logger trx
     --no-build
   displayName: 'Run tests'
-  condition: and(succeeded(), eq(variables['ApplicationPlatform'], 'NuGet'))
+  condition: succeeded()
 
 - task: PublishTestResults@2
   displayName: 'Publish test results'
@@ -71,7 +71,7 @@
 
 - task: PublishCodeCoverageResults@1
   displayName: Publish code coverage report
-  condition: and(succeededOrFailed(), eq(variables['ApplicationPlatform'], 'NuGet'))
+  condition: succeededOrFailed()
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: "$(Build.SourcesDirectory)/coverage.cobertura.xml"
