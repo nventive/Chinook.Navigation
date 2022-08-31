@@ -57,7 +57,7 @@ namespace Chinook.SectionsNavigation
 			if (sectionNavigator.State.Stack.LastOrDefault() == null)
 			{
 				// Create the default page if there's nothing in the section.
-				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true));
+				await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransitions: true));
 			}
 			else if (returnToRoot && sectionNavigator.State.Stack.Last().ViewModel.GetType() != viewModelType)
 			{
@@ -76,7 +76,7 @@ namespace Chinook.SectionsNavigation
 				else
 				{
 					// If the section root page isn't in the stack, clear everything and navigate to it.
-					await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true, clearBackStack: true));
+					await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransitions: true, clearBackStack: true));
 				}
 			}
 
@@ -272,7 +272,7 @@ namespace Chinook.SectionsNavigation
 		/// <returns>The newly created ViewModel instance.</returns>
 		public static async Task<INavigableViewModel> OpenModal(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Type viewModelType, Func<INavigableViewModel> viewModelProvider, int? priority = null, string name = null)
 		{
-			var modalNavigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransition: true), name, priority));
+			var modalNavigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransitions: true), name, priority));
 			// Note that modalNavigator can be null if the OpenModal gets cancelled.
 			return modalNavigator?.GetActiveViewModel();
 		}
@@ -290,7 +290,7 @@ namespace Chinook.SectionsNavigation
 		public static async Task<TViewModel> OpenModal<TViewModel>(this ISectionsNavigator sectionsNavigator, CancellationToken ct, Func<TViewModel> viewModelProvider, int? priority = null, string name = null)
 			where TViewModel : INavigableViewModel
 		{
-			var modalNavigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransition: true), name, priority));
+			var modalNavigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransitions: true), name, priority));
 			// Note that modalNavigator can be null if the OpenModal gets cancelled.
 			return (TViewModel)modalNavigator?.GetActiveViewModel();
 		}

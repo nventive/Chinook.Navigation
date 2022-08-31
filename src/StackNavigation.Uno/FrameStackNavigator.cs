@@ -13,12 +13,20 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Chinook.StackNavigation
 {
+	/// <summary>
+	/// This implementation of <see cref="IStackNavigator"/> uses a <see cref="Frame"/> to manage the navigation.
+	/// </summary>
 	public class FrameStackNavigator : StackNavigatorBase
 	{
 		private readonly Frame _frame;
 
 		private bool _isProcessingFrameInitiatedBack;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FrameStackNavigator"/> class.
+		/// </summary>
+		/// <param name="frame">The frame.</param>
+		/// <param name="registrations">The type registrations mapping ViewModel types to View types.</param>
 		public FrameStackNavigator(Frame frame, IReadOnlyDictionary<Type, Type> registrations)
 			: base(registrations)
 		{
@@ -29,6 +37,7 @@ namespace Chinook.StackNavigation
 
 		private CoreDispatcher Dispatcher => _frame.Dispatcher;
 
+		/// <inheritdoc/>
 		protected override ILogger GetLogger() => this.Log();
 
 		/// <summary>
@@ -78,6 +87,7 @@ namespace Chinook.StackNavigation
 			}
 		}
 
+		/// <inheritdoc/>
 		protected override async Task InnerClear()
 		{
 			var entriesToRemove = Stack.ToArray();
@@ -93,6 +103,7 @@ namespace Chinook.StackNavigation
 			}
 		}
 
+		/// <inheritdoc/>
 		protected override async Task InnerRemoveEntries(IEnumerable<int> orderedIndexes)
 		{
 			var entriesToRemove = orderedIndexes.Select(s => Stack.ElementAt(s)).ToArray();
@@ -119,6 +130,7 @@ namespace Chinook.StackNavigation
 			}
 		}
 
+		/// <inheritdoc/>
 		protected override async Task<object> InnerNavigateAndGetView(INavigableViewModel viewModel)
 		{
 			var request = State.LastRequest;
@@ -238,6 +250,7 @@ namespace Chinook.StackNavigation
 			}
 		}
 
+		/// <inheritdoc/>
 		protected override async Task InnerNavigateBack(NavigationStackEntry entryToRemove, NavigationStackEntry activeEntry)
 		{
 			// When this flag is true, the Frame already navigated back (e.g. using the back button),
