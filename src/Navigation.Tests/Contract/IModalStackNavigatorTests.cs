@@ -1,4 +1,5 @@
 ﻿using Chinook.SectionsNavigation;
+using Chinook.StackNavigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Chinook.Navigation.Tests.Contract
+namespace Tests.Contract
 {
 	public class IModalStackNavigatorTests
 	{
@@ -19,10 +20,10 @@ namespace Chinook.Navigation.Tests.Contract
 			var sectionsNavigator = new BlindSectionsNavigator("Section1", "Section2");
 
 			// If the core contract changes, we get compilation errors here.
-			IModalStackNavigator navigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigation.StackNavigatorRequest.GetNavigateRequest(() => new TestVM()), "modalName", 0));
+			IModalStackNavigator navigator = await sectionsNavigator.OpenModal(ct, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM()), "modalName", 0));
 
 			// Make sure IModalStackNavigator inherits from IStackNavigator
-			StackNavigation.IStackNavigator stackNavigator = navigator;
+			IStackNavigator stackNavigator = navigator;
 
 			Assert.Equal("modalName", navigator.Name);
 			Assert.Equal(0, navigator.Priority);
@@ -33,16 +34,16 @@ namespace Chinook.Navigation.Tests.Contract
 		{
 			var assemblies = new Assembly[]
 			{
-				Assembly.GetAssembly(typeof(StackNavigation.IStackNavigator)),
+				Assembly.GetAssembly(typeof(IStackNavigator)),
 				Assembly.GetAssembly(typeof(IModalStackNavigator)),
-				Assembly.GetAssembly(typeof(StackNavigation.StackNavigatorReactiveExtensions)),
+				Assembly.GetAssembly(typeof(StackNavigatorReactiveExtensions)),
 				Assembly.GetAssembly(typeof(SectionsNavigatorReactiveExtensions)),
 			};
 
-			ReflectionHelper.MatchExtensions(assemblies, typeof(StackNavigation.IStackNavigator), typeof(IModalStackNavigator));
+			ReflectionHelper.MatchExtensions(assemblies, typeof(IStackNavigator), typeof(IModalStackNavigator));
 		}
 
-		private class TestVM : StackNavigation.INavigableViewModel
+		private class TestVM : INavigableViewModel
 		{
 			public void Dispose()
 			{

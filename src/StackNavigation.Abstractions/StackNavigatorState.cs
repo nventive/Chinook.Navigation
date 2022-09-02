@@ -10,6 +10,12 @@ namespace Chinook.StackNavigation
 	/// </summary>
 	public class StackNavigatorState
 	{
+		/// <summary>
+		/// Initializes a new instance of <see cref="StackNavigatorState"/>.
+		/// </summary>
+		/// <param name="stack">The navigation stack.</param>
+		/// <param name="lastRequestState">The state of the last request.</param>
+		/// <param name="lastRequest">The last request.</param>
 		public StackNavigatorState(IReadOnlyList<NavigationStackEntry> stack, NavigatorRequestState lastRequestState, StackNavigatorRequest lastRequest)
 		{
 			Stack = stack;

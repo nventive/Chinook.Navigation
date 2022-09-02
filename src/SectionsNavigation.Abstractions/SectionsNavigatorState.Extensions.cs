@@ -98,7 +98,7 @@ namespace Chinook.SectionsNavigation
 				if (sectionsRequest.ModalPriority.HasValue)
 				{
 					// If the priority is specified, the new modal could be opened behind an existing one.
-					if ((sectionsNavigatorState.ActiveModal?.Priority ?? 0) >= sectionsRequest.ModalPriority.Value)
+					if ((sectionsNavigatorState.ActiveModal?.Priority ?? 0) <= sectionsRequest.ModalPriority.Value)
 					{
 						// If the priority of the new modal is above the active one's, the new modal will be the active one.
 						return sectionsRequest.NewModalStackNavigationRequest.ViewModelType;

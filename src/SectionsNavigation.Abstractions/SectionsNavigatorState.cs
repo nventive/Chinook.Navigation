@@ -12,6 +12,14 @@ namespace Chinook.SectionsNavigation
 	/// </summary>
 	public class SectionsNavigatorState
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SectionsNavigatorState"/> class.
+		/// </summary>
+		/// <param name="sections">The list of sections.</param>
+		/// <param name="activeSection">The active section.</param>
+		/// <param name="modals">The list of modals.</param>
+		/// <param name="lastRequestState">The state of the last request.</param>
+		/// <param name="lastRequest">The last request.</param>
 		public SectionsNavigatorState(
 			IReadOnlyDictionary<string, ISectionStackNavigator> sections,
 			ISectionStackNavigator activeSection,
@@ -29,6 +37,12 @@ namespace Chinook.SectionsNavigation
 			LastRequest = lastRequest;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SectionsNavigatorState"/> class.
+		/// </summary>
+		/// <param name="state">Another <see cref="SectionsNavigatorState"/> instance from which to copy the sections and modals.</param>
+		/// <param name="lastRequestState">The state of the last request.</param>
+		/// <param name="lastRequest">The last request.</param>
 		public SectionsNavigatorState(
 			SectionsNavigatorState state,
 			NavigatorRequestState lastRequestState,

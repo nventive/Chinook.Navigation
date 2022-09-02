@@ -8,7 +8,7 @@ using Chinook.StackNavigation;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Chinook.Navigation.Tests
+namespace Tests
 {
 	public class BlindStackNavigatorTests
 	{

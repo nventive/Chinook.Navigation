@@ -17,7 +17,14 @@ namespace Chinook.StackNavigation
 		/// <summary>The mutex to use when setting the <see cref="State"/> property to Processing.</summary>
 		private readonly object _processingStateMutex = new object();
 
+		/// <summary>
+		/// The logger to use for this class.
+		/// </summary>
 		protected readonly ILogger _logger;
+
+		/// <summary>
+		/// The type registrations mapping ViewModel types to View types.
+		/// </summary>
 		protected readonly IReadOnlyDictionary<Type, Type> _registrations;
 
 		/// <summary>
@@ -55,6 +62,7 @@ namespace Chinook.StackNavigation
 			}
 		}
 
+		/// <inheritdoc cref="StackNavigatorState.Stack"/>
 		protected IReadOnlyList<NavigationStackEntry> Stack => State.Stack;
 
 		/// <inheritdoc/>

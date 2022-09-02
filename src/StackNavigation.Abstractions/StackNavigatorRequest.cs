@@ -4,34 +4,68 @@ using System.Text;
 
 namespace Chinook.StackNavigation
 {
+	/// <summary>
+	/// Represents the type of a <see cref="StackNavigatorRequest"/>.
+	/// </summary>
 	public enum StackNavigatorRequestType
 	{
+		/// <summary>
+		/// Represents a forward navigation.
+		/// </summary>
 		NavigateForward,
+		
+		/// <summary>
+		/// Represents a back navigation.
+		/// </summary>
 		NavigateBack,
+
+		/// <summary>
+		/// Represents a removal of existing navigation entries.
+		/// </summary>
 		RemoveEntry,
+
+		/// <summary>
+		/// Represents a removal of all existing navigations entries.
+		/// </summary>
 		Clear
 	}
 
+	/// <summary>
+	/// Represents a navigation request for a <see cref="IStackNavigator"/>.
+	/// </summary>
 	public class StackNavigatorRequest
 	{
-		public static StackNavigatorRequest GetNavigateRequest(Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransition = false, bool clearBackStack = false) => new StackNavigatorRequest(
+		/// <summary>
+		/// Gets a new <see cref="StackNavigatorRequest"/> for forward navigation.
+		/// </summary>
+		/// <inheritdoc cref="StackNavigatorRequest.StackNavigatorRequest(StackNavigatorRequestType, Type, Type, Func{INavigableViewModel}, bool?, bool?, IEnumerable{int})"/>
+		public static StackNavigatorRequest GetNavigateRequest(Type viewModelType, Func<INavigableViewModel> viewModelProvider, bool suppressTransitions = false, bool clearBackStack = false) => new StackNavigatorRequest(
 			StackNavigatorRequestType.NavigateForward,
 			viewModelType: viewModelType,
 			viewType: null,
 			viewModelProvider: () => viewModelProvider(),
-			suppressTransitions: suppressTransition,
+			suppressTransitions: suppressTransitions,
 			clearBackStack: clearBackStack,
 			entryIndexesToRemove: null);
 
-		public static StackNavigatorRequest GetNavigateRequest<TViewModel>(Func<TViewModel> viewModelProvider, bool suppressTransition = false, bool clearBackStack = false) where TViewModel : INavigableViewModel => new StackNavigatorRequest(
+		/// <summary>
+		/// Gets a new <see cref="StackNavigatorRequest"/> for forward navigation.
+		/// </summary>
+		/// <typeparam name="TViewModel">The type of ViewModel.</typeparam>
+		/// <inheritdoc cref="StackNavigatorRequest.StackNavigatorRequest(StackNavigatorRequestType, Type, Type, Func{INavigableViewModel}, bool?, bool?, IEnumerable{int})"/>
+		public static StackNavigatorRequest GetNavigateRequest<TViewModel>(Func<TViewModel> viewModelProvider, bool suppressTransitions = false, bool clearBackStack = false) where TViewModel : INavigableViewModel => new StackNavigatorRequest(
 			StackNavigatorRequestType.NavigateForward,
 			viewModelType: typeof(TViewModel),
 			viewType: null,
 			viewModelProvider: () => viewModelProvider(),
-			suppressTransitions: suppressTransition,
+			suppressTransitions: suppressTransitions,
 			clearBackStack: clearBackStack,
 			entryIndexesToRemove: null);
 
+		/// <summary>
+		/// Gets a new <see cref="StackNavigatorRequest"/> for a <see cref="StackNavigatorRequestType.RemoveEntry"/> operation.
+		/// </summary>
+		/// <inheritdoc cref="StackNavigatorRequest.StackNavigatorRequest(StackNavigatorRequestType, Type, Type, Func{INavigableViewModel}, bool?, bool?, IEnumerable{int})"/>
 		public static StackNavigatorRequest GetRemoveEntryRequest(IEnumerable<int> entryIndexesToRemove) => new StackNavigatorRequest(
 			StackNavigatorRequestType.RemoveEntry,
 			viewModelType: null,
@@ -41,6 +75,10 @@ namespace Chinook.StackNavigation
 			clearBackStack: null,
 			entryIndexesToRemove: entryIndexesToRemove);
 
+		/// <summary>
+		/// Gets a new <see cref="StackNavigatorRequest"/> for a <see cref="StackNavigatorRequestType.Clear"/> operation.
+		/// </summary>
+		/// <inheritdoc cref="StackNavigatorRequest.StackNavigatorRequest(StackNavigatorRequestType, Type, Type, Func{INavigableViewModel}, bool?, bool?, IEnumerable{int})"/>
 		public static StackNavigatorRequest GetClearRequest() => new StackNavigatorRequest(
 			StackNavigatorRequestType.Clear,
 			viewModelType: null,
@@ -50,6 +88,10 @@ namespace Chinook.StackNavigation
 			clearBackStack: null,
 			entryIndexesToRemove: null);
 
+		/// <summary>
+		/// Gets a new <see cref="StackNavigatorRequest"/> for back navigation.
+		/// </summary>
+		/// <inheritdoc cref="StackNavigatorRequest.StackNavigatorRequest(StackNavigatorRequestType, Type, Type, Func{INavigableViewModel}, bool?, bool?, IEnumerable{int})"/>
 		public static StackNavigatorRequest GetNavigateBackRequest() => new StackNavigatorRequest(
 			StackNavigatorRequestType.NavigateBack,
 			viewModelType: null,
@@ -59,6 +101,16 @@ namespace Chinook.StackNavigation
 			clearBackStack: null,
 			entryIndexesToRemove: null);
 
+		/// <summary>
+		/// ­Initializes a new instance of the <see cref="StackNavigatorRequest"/> class.
+		/// </summary>
+		/// <param name="requestType">The type of request.</param>
+		/// <param name="viewModelType">The type of the ViewModel.</param>
+		/// <param name="viewType">The type of the view.</param>
+		/// <param name="viewModelProvider">The function providing the ViewModel instance.</param>
+		/// <param name="suppressTransitions">Flag indicating whether to suppress the navigation transitions.</param>
+		/// <param name="clearBackStack">Flag indicating whether to clear the back stack.</param>
+		/// <param name="entryIndexesToRemove">The list of index to remove.</param>
 		public StackNavigatorRequest(
 			StackNavigatorRequestType requestType,
 			Type viewModelType,
@@ -120,10 +172,10 @@ namespace Chinook.StackNavigation
 		/// </summary>
 		public IEnumerable<int> EntryIndexesToRemove { get; }
 
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return $"{RequestType}, {nameof(ViewModelType)}: {ViewModelType?.Name}";
 		}
 	}
-
 }

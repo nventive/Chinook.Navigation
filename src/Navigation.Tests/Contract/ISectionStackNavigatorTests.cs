@@ -1,4 +1,5 @@
 ﻿using Chinook.SectionsNavigation;
+using Chinook.StackNavigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Chinook.Navigation.Tests.Contract
+namespace Tests.Contract
 {
 	public class ISectionStackNavigatorTests
 	{
@@ -22,7 +23,7 @@ namespace Chinook.Navigation.Tests.Contract
 			ISectionStackNavigator navigator = await sectionsNavigator.SetActiveSection(ct, SectionsNavigatorRequest.GetSetActiveSectionRequest("Section1"));
 
 			// Make sure ISectionStackNavigator inherits from IStackNavigator
-			StackNavigation.IStackNavigator stackNavigator = navigator;
+			IStackNavigator stackNavigator = navigator;
 
 			Assert.Equal("Section1", navigator.Name);
 		}
@@ -32,14 +33,14 @@ namespace Chinook.Navigation.Tests.Contract
 		{
 			var assemblies = new Assembly[]
 			{
-				Assembly.GetAssembly(typeof(StackNavigation.IStackNavigator)),
+				Assembly.GetAssembly(typeof(IStackNavigator)),
 				Assembly.GetAssembly(typeof(ISectionStackNavigator)),
-				Assembly.GetAssembly(typeof(StackNavigation.StackNavigatorReactiveExtensions)),
+				Assembly.GetAssembly(typeof(StackNavigatorReactiveExtensions)),
 				Assembly.GetAssembly(typeof(SectionsNavigatorReactiveExtensions)),
 
 			};
 
-			ReflectionHelper.MatchExtensions(assemblies, typeof(StackNavigation.IStackNavigator), typeof(ISectionStackNavigator));
+			ReflectionHelper.MatchExtensions(assemblies, typeof(IStackNavigator), typeof(ISectionStackNavigator));
 		}		
 	}
 }

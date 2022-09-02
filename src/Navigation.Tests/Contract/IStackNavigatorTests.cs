@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Chinook.Navigation.Tests.Contract
+namespace Tests.Contract
 {
 	public class IStackNavigatorTests
 	{

@@ -10,7 +10,7 @@ using Chinook.StackNavigation;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Chinook.Navigation.Tests
+namespace Tests
 {
 	public class BlindSectionsNavigatorTests
 	{
@@ -41,7 +41,7 @@ namespace Chinook.Navigation.Tests
 		{
 			var sut = new BlindSectionsNavigator();
 
-			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true)));
+			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true)));
 
 			Assert.NotNull(modalNavigator);
 			Assert.Equal(1, modalNavigator.Priority);
@@ -52,7 +52,7 @@ namespace Chinook.Navigation.Tests
 			Assert.Equal(modalNavigator, sut.State.ActiveModal);
 			Assert.Equal(modalNavigator, sut.State.Modals[0]);
 
-			var modalNavigator2 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(2), suppressTransition: true)));
+			var modalNavigator2 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(2), suppressTransitions: true)));
 
 			Assert.NotNull(modalNavigator2);
 			Assert.Equal(2, modalNavigator2.Priority);
@@ -70,7 +70,7 @@ namespace Chinook.Navigation.Tests
 		{
 			var sut = new BlindSectionsNavigator();
 
-			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true)));
+			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true)));
 			var vm = (TestVM)modalNavigator.State.Stack.Last().ViewModel;
 
 			await sut.CloseModal(CancellationToken.None, SectionsNavigatorRequest.GetCloseModalRequest(null));
@@ -83,13 +83,13 @@ namespace Chinook.Navigation.Tests
 		{
 			var sut = new BlindSectionsNavigator();
 
-			var modalNavigator3 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(3), suppressTransition: true), modalPriority: 3));
-			var modalNavigator1 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true), modalPriority: 1));
+			var modalNavigator3 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(3), suppressTransitions: true), modalPriority: 3));
+			var modalNavigator1 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true), modalPriority: 1));
 
 			Assert.Equal(sut.State.Modals[0], modalNavigator1);
 			Assert.Equal(sut.State.Modals[1], modalNavigator3);
 
-			var modalNavigator2 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(2), suppressTransition: true), modalPriority: 2));
+			var modalNavigator2 = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(2), suppressTransitions: true), modalPriority: 2));
 
 			Assert.Equal(sut.State.Modals[0], modalNavigator1);
 			Assert.Equal(sut.State.Modals[1], modalNavigator2);
@@ -101,10 +101,10 @@ namespace Chinook.Navigation.Tests
 		{
 			var sut = new BlindSectionsNavigator();
 
-			await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransition: true), modalName: "modalName"));
+			await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransitions: true), modalName: "modalName"));
 			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
-				await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransition: true), modalName: "modalName"));
+				await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransitions: true), modalName: "modalName"));
 			});
 		}
 
@@ -113,10 +113,10 @@ namespace Chinook.Navigation.Tests
 		{
 			var sut = new BlindSectionsNavigator();
 
-			await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransition: true), modalPriority: 1));
+			await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransitions: true), modalPriority: 1));
 			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
-				await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransition: true), modalPriority: 1));
+				await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(), suppressTransitions: true), modalPriority: 1));
 			});
 		}
 
@@ -134,7 +134,7 @@ namespace Chinook.Navigation.Tests
 				eventList.Add((sender, args));
 			}
 
-			await section.Navigate(CancellationToken.None, StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true));
+			await section.Navigate(CancellationToken.None, StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true));
 
 			Assert.Equal(2, eventList.Count);
 			Assert.Equal(NavigatorRequestState.Processing, eventList[0].args.CurrentState.LastRequestState);
@@ -157,7 +157,7 @@ namespace Chinook.Navigation.Tests
 				eventList.Add((sender, args));
 			}
 
-			await Assert.ThrowsAsync<InvalidOperationException>(async () => await section.Navigate(CancellationToken.None, StackNavigatorRequest.GetNavigateRequest(() => TestVM.Throw(), suppressTransition: true)));
+			await Assert.ThrowsAsync<InvalidOperationException>(async () => await section.Navigate(CancellationToken.None, StackNavigatorRequest.GetNavigateRequest(() => TestVM.Throw(), suppressTransitions: true)));
 
 			Assert.Equal(2, eventList.Count);
 			Assert.Equal(NavigatorRequestState.Processing, eventList[0].args.CurrentState.LastRequestState);
@@ -178,7 +178,7 @@ namespace Chinook.Navigation.Tests
 				eventList.Add((sender, args));
 			}
 
-			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true)));
+			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true)));
 			sut.StateChanged -= OnStateChanged;
 
 			Assert.Equal(2, eventList.Count);
@@ -201,7 +201,7 @@ namespace Chinook.Navigation.Tests
 				eventList.Add((sender, args));
 			}
 
-			await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => TestVM.Throw(), suppressTransition: true))));
+			await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => TestVM.Throw(), suppressTransitions: true))));
 			sut.StateChanged -= OnStateChanged;
 
 			Assert.Equal(2, eventList.Count);
@@ -271,7 +271,7 @@ namespace Chinook.Navigation.Tests
 
 			var eventList = new List<(object sender, SectionsNavigatorEventArgs args)>();
 
-			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransition: true)));
+			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1), suppressTransitions: true)));
 
 			sut.StateChanged += OnStateChanged;
 			void OnStateChanged(object sender, SectionsNavigatorEventArgs args)
@@ -296,7 +296,7 @@ namespace Chinook.Navigation.Tests
 
 			var eventList = new List<(object sender, SectionsNavigatorEventArgs args)>();
 
-			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1, throwOnDispose: true), suppressTransition: true)));
+			var modalNavigator = await sut.OpenModal(CancellationToken.None, SectionsNavigatorRequest.GetOpenModalRequest(StackNavigatorRequest.GetNavigateRequest(() => new TestVM(1, throwOnDispose: true), suppressTransitions: true)));
 
 			sut.StateChanged += OnStateChanged;
 			void OnStateChanged(object sender, SectionsNavigatorEventArgs args)
