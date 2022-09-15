@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace Chinook.StackNavigation
 {
@@ -187,7 +188,7 @@ namespace Chinook.StackNavigation
                         var viewTcs = new TaskCompletionSource<Page>();
                         page.Loaded += OnPageLoaded;
 
-                        void OnPageLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+                        void OnPageLoaded(object sender, RoutedEventArgs e)
                         {
                             page.Loaded -= OnPageLoaded;
                             viewTcs.SetResult(page);
