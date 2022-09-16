@@ -5,8 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using Microsoft.Extensions.Logging;
+using Windows.UI.Dispatching;
+using Microsoft.UI.Dispatching;
 
 namespace Chinook.SectionsNavigation
 {
@@ -168,11 +169,12 @@ namespace Chinook.SectionsNavigation
             var frame = _frames[name];
             _frames.Remove(name);
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, RemoveFrameUI);
+            await DispatcherQueue.EnqueueAsync(RemoveFrameUI, DispatcherQueuePriority.Normal);
 
-            void RemoveFrameUI() // Runs on UI thread
+            Task<bool> RemoveFrameUI() // Runs on UI thread
             {
                 Children.Remove(frame.Frame);
+                return Task.FromResult(true);
             }
         }
 
@@ -186,14 +188,15 @@ namespace Chinook.SectionsNavigation
 
             var frame = _frames[frameName];
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateFrameUI);
+            await DispatcherQueue.EnqueueAsync(UpdateFrameUI, DispatcherQueuePriority.Normal);
 
-            void UpdateFrameUI() // Runs on UI thread
+            Task<bool> UpdateFrameUI() // Runs on UI thread
             {
                 frame.State = FrameState.Shown;
                 frame.Frame.Opacity = 1;
                 frame.Frame.Visibility = Visibility.Visible;
                 frame.Frame.IsHitTestVisible = true;
+                return Task.FromResult(true);
             }
         }
 
@@ -311,9 +314,9 @@ namespace Chinook.SectionsNavigation
             var previousFrame = _frames[previousFrameName];
             var nextFrame = _frames[nextFrameName];
 
-            await Dispatcher.RunTaskAsync(CoreDispatcherPriority.Normal, UpdateView);
+            await DispatcherQueue.EnqueueAsync(UpdateView, DispatcherQueuePriority.Normal);
 
-            async Task UpdateView() // Runs on UI thread
+            async Task<bool> UpdateView() // Runs on UI thread
             {
                 try
                 {
@@ -329,6 +332,8 @@ namespace Chinook.SectionsNavigation
                 {
                     this.Log().LogError("Error in animation", exception);
                 }
+
+                return true;
             }
         }
 

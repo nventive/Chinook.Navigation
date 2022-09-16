@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Core;
+using Microsoft.UI.Dispatching;
+using Windows.UI.Dispatching;
 
 namespace Chinook.StackNavigation
 {
@@ -34,7 +35,7 @@ namespace Chinook.StackNavigation
             HandleFrameInitiatedBackNavigations();
         }
 
-        private CoreDispatcher Dispatcher => _frame.Dispatcher;
+        private DispatcherQueue Dispatcher => _frame.DispatcherQueue;
 
         /// <inheritdoc/>
         protected override ILogger GetLogger() => this.Log();
@@ -47,9 +48,9 @@ namespace Chinook.StackNavigation
         /// </remarks>
         private void HandleFrameInitiatedBackNavigations()
         {
-            _ = Dispatcher.RunAsync(CoreDispatcherPriority.High, UIHandleFrameInitiatedBackNavigations);
+            _ = Dispatcher.EnqueueAsync(UIHandleFrameInitiatedBackNavigations, DispatcherQueuePriority.High);
 
-            void UIHandleFrameInitiatedBackNavigations()
+            Task<bool> UIHandleFrameInitiatedBackNavigations()
             {
                 _frame.Navigated += async (s, e) =>
                 {
@@ -83,6 +84,8 @@ namespace Chinook.StackNavigation
                         }
                     }
                 };
+
+                return Task.FromResult(true);
             }
         }
 
@@ -91,14 +94,15 @@ namespace Chinook.StackNavigation
         {
             var entriesToRemove = Stack.ToArray();
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.High, UIClear);
+            await Dispatcher.EnqueueAsync(UIClear, DispatcherQueuePriority.High);
 
-            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entriesToRemove));
+            _ = Dispatcher.EnqueueAsync(() => UIResetDataContext(entriesToRemove), DispatcherQueuePriority.Low);
 
-            void UIClear()
+            Task<bool> UIClear()
             {
                 _frame.Content = null;
                 _frame.BackStack?.Clear();
+                return Task.FromResult(true);
             }
         }
 
@@ -107,11 +111,11 @@ namespace Chinook.StackNavigation
         {
             var entriesToRemove = orderedIndexes.Select(s => Stack.ElementAt(s)).ToArray();
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.High, UIRemoveEntries);
+            await Dispatcher.EnqueueAsync(UIRemoveEntries, DispatcherQueuePriority.High);
 
-            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entriesToRemove));
+            _ = Dispatcher.EnqueueAsync(() => UIResetDataContext(entriesToRemove), DispatcherQueuePriority.Low);
 
-            void UIRemoveEntries()
+            Task<bool> UIRemoveEntries()
             {
                 // Start with the last item so that the indexes stay valid as we iterate.
                 foreach (var index in orderedIndexes)
@@ -126,6 +130,8 @@ namespace Chinook.StackNavigation
                         _frame.BackStack.RemoveAt(index);
                     }
                 }
+
+                return Task.FromResult(true);
             }
         }
 
@@ -147,7 +153,7 @@ namespace Chinook.StackNavigation
                 }
             }
 
-            var view = await Dispatcher.RunTaskAsync(CoreDispatcherPriority.High, UINavigate);
+            var view = await Dispatcher.EnqueueAsync(UINavigate, DispatcherQueuePriority.High);
 
             if (view != null && !(request.SuppressTransitions ?? false))
             {
@@ -257,7 +263,7 @@ namespace Chinook.StackNavigation
             // sure is to reset the DataContext of the view.
             if (!_isProcessingFrameInitiatedBack)
             {
-                await Dispatcher.RunTaskAsync(CoreDispatcherPriority.High, UIBack);
+                await Dispatcher.EnqueueAsync(UIBack, DispatcherQueuePriority.High);
 
                 if (!(entryToRemove.Request.SuppressTransitions ?? false))
                 {
@@ -266,9 +272,9 @@ namespace Chinook.StackNavigation
                 }
             }
 
-            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entryToRemove));
+            _ = Dispatcher.EnqueueAsync(() => UIResetDataContext(entryToRemove), DispatcherQueuePriority.Low);
 
-            async Task UIBack()
+            async Task<bool> UIBack()
             {
                 try
                 {
@@ -297,6 +303,8 @@ namespace Chinook.StackNavigation
                         _logger.LogError($"Failed frame navigate back.", e);
                     }
                 }
+
+                return true;
             }
         }
 
@@ -331,7 +339,7 @@ namespace Chinook.StackNavigation
             }
         }
 
-        private void UIResetDataContext(params NavigationStackEntry[] entries)
+        private Task<bool> UIResetDataContext(params NavigationStackEntry[] entries)
         {
             foreach (var entry in entries)
             {
@@ -352,6 +360,8 @@ namespace Chinook.StackNavigation
                     }
                 }
             }
+
+            return Task.FromResult(true);
         }
     }
 }
