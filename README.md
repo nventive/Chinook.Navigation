@@ -56,7 +56,7 @@ The following steps will show how to setup the `ISectionsNavigator`.
 
 ## Getting Started
 
-1. Install the latest version of `Chinook.SectionsNavigation.Uno` in your project.
+1. Install the latest version of `Chinook.SectionsNavigation.Uno` or `Chinook.SectionsNavigation.Uno.WinUI` in your project.
 
 1. Create a base class that implements `INavigableViewModel` for your ViewModels.
 

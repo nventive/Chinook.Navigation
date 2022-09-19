@@ -1,12 +1,12 @@
 ﻿using Chinook.StackNavigation;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 
 namespace Chinook.SectionsNavigation
 {
@@ -69,7 +69,7 @@ namespace Chinook.SectionsNavigation
             );
         }
 
-        private CoreDispatcher Dispatcher => _multiFrame.Dispatcher;
+        private DispatcherQueue Dispatcher => _multiFrame.DispatcherQueue;
 
         /// <inheritdoc/>
         public override SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; } = FrameSectionsTransitionInfo.FadeInOrFadeOut;
@@ -101,13 +101,14 @@ namespace Chinook.SectionsNavigation
         {
             var frame = default(Frame);
             var transitionInfoType = ((FrameSectionsTransitionInfo)transitionInfo).Type;
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, CreateFrameUI);
+            await Dispatcher.EnqueueAsync(CreateFrameUI, DispatcherQueuePriority.Normal);
 
             return new FrameStackNavigator(frame, _globalRegistrations);
 
-            void CreateFrameUI() // Runs on UI thread
+            Task<bool> CreateFrameUI() // Runs on UI thread
             {
                 frame = _multiFrame.GetOrCreateFrame(name, priority, transitionInfoType);
+                return Task.FromResult(true);
             }
         }
 
