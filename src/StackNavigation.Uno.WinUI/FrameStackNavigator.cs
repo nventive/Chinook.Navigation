@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
-using Windows.UI.Dispatching;
 
 namespace Chinook.StackNavigation
 {
