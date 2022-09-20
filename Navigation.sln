@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SectionsNavigation.Reactive
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SectionsNavigation.Uno.WinUI", "src\SectionsNavigation.Uno.WinUI\SectionsNavigation.Uno.WinUI.csproj", "{B1259F8E-4239-4C5E-9C12-D39277A3A10E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackNavigation.Uno.WinUI", "src\StackNavigation.Uno.WinUI\StackNavigation.Uno.WinUI.csproj", "{94CE9CDB-C65B-4777-8465-7EC61BC43790}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackNavigation.Uno.WinUI", "src\StackNavigation.Uno.WinUI\StackNavigation.Uno.WinUI.csproj", "{94CE9CDB-C65B-4777-8465-7EC61BC43790}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SectionsShared", "src\SectionsShared\SectionsShared.shproj", "{E34FF0EC-DF3E-436A-8EBF-8DA734DA9D6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,8 +127,14 @@ Global
 		{DA1909D4-0823-4093-A635-9C42CDBF5F3D} = {21903409-7322-4C3C-B832-9B0009835234}
 		{B1259F8E-4239-4C5E-9C12-D39277A3A10E} = {21903409-7322-4C3C-B832-9B0009835234}
 		{94CE9CDB-C65B-4777-8465-7EC61BC43790} = {BC125B1E-7DD4-47AB-ABB6-F9A006218DC4}
+		{E34FF0EC-DF3E-436A-8EBF-8DA734DA9D6A} = {21903409-7322-4C3C-B832-9B0009835234}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8EC37D3B-56FD-4AB2-91B2-7D33467592F9}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\SectionsShared\SectionsShared.projitems*{46673df9-c917-4672-ae5b-eca6bd4c2f37}*SharedItemsImports = 5
+		src\SectionsShared\SectionsShared.projitems*{b1259f8e-4239-4c5e-9c12-d39277a3a10e}*SharedItemsImports = 5
+		src\SectionsShared\SectionsShared.projitems*{e34ff0ec-df3e-436a-8ebf-8da734da9d6a}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

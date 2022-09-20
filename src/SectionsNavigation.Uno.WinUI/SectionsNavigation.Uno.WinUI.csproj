@@ -3,7 +3,6 @@
     <!-- Change the TargetFrameworks depending on which platform you are building on. This avoids errors as it is impossible to build UAP on OSX (MacOS) -->
     <TargetFrameworks Condition="'$([MSBuild]::IsOsPlatform(OSX))'">netstandard2.0;net6.0-ios;net6.0-maccatalyst;net6.0-macos</TargetFrameworks>
     <TargetFrameworks Condition="'!$([MSBuild]::IsOsPlatform(OSX))'">net6.0-windows10.0.18362;netstandard2.0;net6.0-android</TargetFrameworks>
-    <LangVersion>10.0</LangVersion>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <RootNamespace>Chinook.SectionsNavigation</RootNamespace>
@@ -22,6 +21,7 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DefineConstants>$(DefineConstants);WINUI</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup>
@@ -55,4 +55,6 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
+
+  <Import Project="..\SectionsShared\SectionsShared.projitems" Label="Shared" />
 </Project>

@@ -3,7 +3,7 @@
 namespace Microsoft.UI.Xaml.Media.Animation
 {
     /// <summary>
-    /// Extension methods for classes in the Windows.UI.Xaml.Media.Animation namespace.
+    /// Extension methods for classes in the Micrososft.UI.Xaml.Media.Animation namespace.
     /// </summary>
     internal static class StoryboardExtensions
     {

@@ -44,4 +44,5 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
+  <Import Project="..\SectionsShared\SectionsShared.projitems" Label="Shared" />
 </Project>

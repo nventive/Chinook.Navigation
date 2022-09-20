@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+#if WINUI
+using Microsoft.UI.Xaml.Controls;
+#else
 using Windows.UI.Xaml.Controls;
+#endif
 
 namespace Chinook.SectionsNavigation
 {
