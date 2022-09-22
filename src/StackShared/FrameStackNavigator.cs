@@ -201,11 +201,7 @@ namespace Chinook.StackNavigation
 						var viewTcs = new TaskCompletionSource<Page>();
 						page.Loaded += OnPageLoaded;
 
-#if WINUI
                         void OnPageLoaded(object sender, RoutedEventArgs e)
-#else
-						void OnPageLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-#endif
                         {
 							page.Loaded -= OnPageLoaded;
 							viewTcs.SetResult(page);

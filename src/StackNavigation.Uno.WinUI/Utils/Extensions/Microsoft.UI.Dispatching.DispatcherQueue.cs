@@ -7,18 +7,12 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 
 namespace Microsoft.UI.Dispatching
 {
     internal static class DispatcherQueueExtensions
     {
-        /// <summary>
-        /// Indicates whether or not <see cref="DispatcherQueue.HasThreadAccess"/> is available.
-        /// </summary>
-        private static readonly bool IsHasThreadAccessPropertyAvailable = ApiInformation.IsMethodPresent("Windows.System.DispatcherQueue", "HasThreadAccess");
-
         /// <summary>
         /// Convert <see cref="CoreDispatcherPriority"/> to <see cref="DispatcherQueuePriority"/>
         /// </summary>
@@ -74,7 +68,7 @@ namespace Microsoft.UI.Dispatching
             // Run the function directly when we have thread access.
             // Also reuse Task.CompletedTask in case of success,
             // to skip an unnecessary heap allocation for every invocation.
-            if (IsHasThreadAccessPropertyAvailable && dispatcher.HasThreadAccess)
+            if (dispatcher.HasThreadAccess)
             {
                 try
                 {
@@ -147,7 +141,7 @@ namespace Microsoft.UI.Dispatching
             // We don't use ConfigureAwait(false) in this case, in order
             // to let the caller continue its execution on the same thread
             // after awaiting the task returned by this function.
-            if (IsHasThreadAccessPropertyAvailable && dispatcher.HasThreadAccess)
+            if (dispatcher.HasThreadAccess)
             {
                 try
                 {
@@ -210,7 +204,7 @@ namespace Microsoft.UI.Dispatching
         /// <remarks>If the current thread has access to <paramref name="dispatcher"/>, <paramref name="function"/> will be invoked directly.</remarks>
         internal static Task<T> EnqueueAsync<T>(this DispatcherQueue dispatcher, Func<Task<T>> function, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal)
         {
-            if (IsHasThreadAccessPropertyAvailable && dispatcher.HasThreadAccess)
+            if (dispatcher.HasThreadAccess)
             {
                 try
                 {
