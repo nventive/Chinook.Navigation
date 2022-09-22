@@ -12,7 +12,7 @@
     <Description>Unified cross-platform tools to perform ViewModel-based navigation.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>navigation;mvvm;maui;winui;net6.0-ios;net6.0-android;chinook</PackageTags>
+    <PackageTags>navigation;mvvm;maui;winui;ios;android;chinook</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
 
@@ -53,4 +53,6 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
+
+  <Import Project="..\StackShared\StackShared.projitems" Label="Shared" />
 </Project>

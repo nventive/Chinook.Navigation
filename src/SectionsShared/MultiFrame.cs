@@ -5,10 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+#if WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Dispatching;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+#endif
 #if __IOS__
 using _UIViewController = UIKit.UIViewController;
 #else
@@ -24,6 +32,11 @@ namespace Chinook.SectionsNavigation
 	{
 		private readonly Dictionary<string, FrameInfo> _frames = new Dictionary<string, FrameInfo>();
 		private readonly TaskCompletionSource<bool> _isReady = new TaskCompletionSource<bool>();
+#if WINUI
+		private DispatcherQueue _dispatcher => DispatcherQueue;
+#else
+		private CoreDispatcher _dispatcher => Dispatcher;
+#endif
 
 		/// <summary>
 		/// Creates a new instance of <see cref="MultiFrame"/>.
@@ -175,7 +188,7 @@ namespace Chinook.SectionsNavigation
 			var frame = _frames[name];
 			_frames.Remove(name);
 
-			await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, RemoveFrameUI);
+			await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, RemoveFrameUI);
 
 			void RemoveFrameUI() // Runs on UI thread
 			{
@@ -193,7 +206,7 @@ namespace Chinook.SectionsNavigation
 
 			var frame = _frames[frameName];
 
-			await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateFrameUI);
+			await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateFrameUI);
 
 			void UpdateFrameUI() // Runs on UI thread
 			{
@@ -318,7 +331,7 @@ namespace Chinook.SectionsNavigation
 			var previousFrame = _frames[previousFrameName];
 			var nextFrame = _frames[nextFrameName];
 
-			await Dispatcher.RunTaskAsync(CoreDispatcherPriority.Normal, UpdateView);
+			await _dispatcher.RunTaskAsync(CoreDispatcherPriority.Normal, UpdateView);
 
 			async Task UpdateView() // Runs on UI thread
 			{

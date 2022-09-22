@@ -11,9 +11,11 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Animations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DelegatingFrameSectionsTransitionInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FrameSectionsNavigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FrameSectionsTransitionInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModalViewController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MostPresentedRootViewController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MultiFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UIViewControllerSectionsTransitionInfo.cs" />
   </ItemGroup>
 </Project>
