@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Chinook.StackNavigation;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
 using System.Threading;
+#if WINUI
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
+#else
+using Windows.UI.Xaml.Controls;
+#endif
 
 namespace Chinook.SectionsNavigation
 {
@@ -70,7 +75,11 @@ namespace Chinook.SectionsNavigation
 			);
 		}
 
+#if WINUI
+		private DispatcherQueue Dispatcher => _multiFrame.DispatcherQueue;
+#else
 		private CoreDispatcher Dispatcher => _multiFrame.Dispatcher;
+#endif
 
 		/// <inheritdoc/>
 		public override SectionsTransitionInfo DefaultSetActiveSectionTransitionInfo { get; set; } = FrameSectionsTransitionInfo.FadeInOrFadeOut;

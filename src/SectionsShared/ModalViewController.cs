@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Windows.UI.Xaml.Controls;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Microsoft.Extensions.Logging;
 #if __IOS__
 using _UIViewController = UIKit.UIViewController;
 #else
 using _UIViewController = System.Object;
+#endif
+#if WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+#else
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 #endif
 
 namespace Chinook.SectionsNavigation

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+#if WINUI
+namespace Microsoft.UI.Xaml.Media.Animation
+#else
 namespace Windows.UI.Xaml.Media.Animation
+#endif
 {
 	/// <summary>
 	/// Extension methods for classes in the Windows.UI.Xaml.Media.Animation namespace.

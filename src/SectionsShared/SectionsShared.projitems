@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e34ff0ec-df3e-436a-8ebf-8da734da9d6a</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SectionsShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Animations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DelegatingFrameSectionsTransitionInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FrameSectionsNavigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FrameSectionsTransitionInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModalViewController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MostPresentedRootViewController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MultiFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UIViewControllerSectionsTransitionInfo.cs" />
+  </ItemGroup>
+</Project>
