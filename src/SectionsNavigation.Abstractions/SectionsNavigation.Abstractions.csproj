@@ -10,7 +10,7 @@
 		<Description>Unified cross-platform tools to perform ViewModel-based navigation.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>navigation;mvvm;xamarin;ios;android;uwp;chinook</PackageTags>
+		<PackageTags>navigation;mvvm;xamarin;ios;android;uwp;chinook;maui;winui</PackageTags>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
 
