@@ -12,21 +12,26 @@
     <Description>Unified cross-platform tools to perform ViewModel-based navigation.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>navigation;mvvm;maui;winui;ios;android;chinook</PackageTags>
+    <PackageTags>navigation;stacknavigation;mvvm;maui;winui;ios;android;chinook</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
+    <DefineConstants>$(DefineConstants);WINUI</DefineConstants>
 
+    <!-- Needed for Source Link support -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <DefineConstants>$(DefineConstants);WINUI</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Uno.WinUI" Version="4.4.13" />
-    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.1.0-dev.9" />
+    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.1.0" />
     <ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Needed for Source Link support -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
@@ -35,6 +40,10 @@
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22000.24" />
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.24" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
