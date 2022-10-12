@@ -14,6 +14,7 @@
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
 
+		<!-- Needed for Source Link support -->
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -30,6 +31,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\SectionsNavigation.Abstractions\SectionsNavigation.Abstractions.csproj" />
 		<ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Needed for Source Link support -->
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 

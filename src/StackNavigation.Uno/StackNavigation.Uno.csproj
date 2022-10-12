@@ -12,10 +12,11 @@
 		<Description>Unified cross-platform tools to perform ViewModel-based navigation.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>navigation;mvvm;xamarin;ios;android;uwp;chinook</PackageTags>
+		<PackageTags>navigation;stacknavigation;mvvm;xamarin;ios;android;uwp;chinook</PackageTags>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/nventive/Chinook.Navigation</PackageProjectUrl>
 
+		<!-- Needed for Source Link support -->
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -40,6 +41,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\StackNavigation\StackNavigation.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Needed for Source Link support -->
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
