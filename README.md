@@ -1,6 +1,6 @@
 # Chinook StackNavigation and SectionsNavigation
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE) ![Version](https://img.shields.io/nuget/v/Chinook.StackNavigation.Abstractions?style=flat-square) ![Downloads](https://img.shields.io/nuget/dt/Chinook.StackNavigation.Abstractions?style=flat-square)
 
 This library provides unified cross-platform tools to perform ViewModel-based navigation using the [Frame](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.frame) navigation model.
 ```csharp
@@ -18,6 +18,12 @@ await navigator.NavigateBack(ct);
 - **UI-Independant**
   - Navigation abstractions are not tied to a specific UI framework.
   - Having the navigation code in the ViewModel layer allows for reusing the same code for multiple platforms.
+
+### More like this
+The Chinook namespace has other recipes for .Net MVVM applications.
+- [Chinook.DynamicMvvm](https://github.com/nventive/Chinook.DynamicMvvm): MVVM libraries for extensible and declarative ViewModels.
+- [Chinook.DataLoader](https://github.com/nventive/Chinook.DataLoader): Customizable async data loading recipes.
+- [Chinook.BackButtonManager](https://github.com/nventive/Chinook.BackButtonManager): Abstractions to deal with hardware back buttons.
 
 ## Before you start
 Before getting started, you should understand the different navigators.
