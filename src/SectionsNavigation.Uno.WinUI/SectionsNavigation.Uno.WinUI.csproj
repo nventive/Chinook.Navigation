@@ -25,8 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Uno.WinUI" Version="4.4.13" />
-    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.1.0" />
+    <PackageReference Include="Uno.WinUI" Version="4.6.18" />
+    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.2.0" />
     <ProjectReference Include="..\SectionsNavigation\SectionsNavigation.csproj" />
     <ProjectReference Include="..\StackNavigation.Uno.WinUI\StackNavigation.Uno.WinUI.csproj" />
   </ItemGroup>
