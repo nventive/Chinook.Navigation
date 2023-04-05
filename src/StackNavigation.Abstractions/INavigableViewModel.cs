@@ -17,5 +17,11 @@ namespace Chinook.StackNavigation
 		/// </remarks>
 		/// <param name="view">The view associated with the navigation. This is typically something inheriting from FrameworkElement.</param>
 		void SetView(object view);
+
+		/// <summary>
+		/// This method is called by <see cref="IStackNavigator"/> implementations before disposing the view model.
+		/// It can be used to stop work early (considering that the disposal is imminent, but not immediate due to potential UI dispatching).
+		/// </summary>
+		void WillDispose();
 	}
 }

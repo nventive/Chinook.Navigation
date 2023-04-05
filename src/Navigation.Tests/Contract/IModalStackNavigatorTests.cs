@@ -52,6 +52,10 @@ namespace Tests.Contract
 			public void SetView(object view)
 			{
 			}
+
+			public void WillDispose()
+			{
+			}
 		}
 	}
 }

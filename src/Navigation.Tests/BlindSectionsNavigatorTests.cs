@@ -347,6 +347,10 @@ namespace Tests
 			{
 				throw new NotImplementedException();
 			}
+
+			public void WillDispose()
+			{
+			}
 		}
 	}
 }
