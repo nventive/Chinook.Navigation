@@ -2,11 +2,6 @@ trigger:
   branches:
     include:
     - main
-    
-resources:
-   containers:
-     - container: windows
-       image: nventive/vs_build-tools:17.2.5
 
 variables:
 - name: NUGET_VERSION
@@ -21,7 +16,7 @@ variables:
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/'))]
 # Pool names
 - name: windowsPoolName
-  value: 'windows 2022'
+  value: 'Windows 2022-23'
 
 stages:
 - stage: Build
@@ -44,8 +39,6 @@ stages:
 
     workspace:
       clean: all # Cleanup the workspaca before starting
-
-    container: windows
 
     steps:
     - template: stage-build.yml
