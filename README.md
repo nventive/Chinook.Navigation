@@ -184,6 +184,8 @@ await navigator.NavigateBack(ct);
 #### iOS back gesture
 The back swipe gesture is supported on iOS devices when using `FrameStackNavigator`.
 
+<img src="docs/images/iOS_Gesture_BackSwipe.gif" alt="iOS Back Swipe Gesture" width="250">
+
 #### Navigate forward, clearing the backstack
 This can be useful when you don't want the user to be able to navigate back.
 ```csharp
@@ -364,17 +366,102 @@ This is because the request state (Processing, Processed or FailedToProcess) is 
 If a request is made while another is processing, the second request is cancelled.
 
 ### Transitions and Animations
-For stack navigation, you can suppress the default transitions using `StackNavigatorRequest.SuppressTransitions`.
+There are five statically available built-in transitions in `FrameSectionsTransitionInfo`.
+- `FrameSectionsTransitionInfo.SuppressTransition`
+- `FrameSectionsTransitionInfo.FadeInOrFadeOut`
+- `FrameSectionsTransitionInfo.SlideUp`
+- `FrameSectionsTransitionInfo.SlideDown`
+- `FrameSectionsTransitionInfo.NativeiOSModal` (available on iOS only)
 
-When using `FrameSectionsNavigator`, you can customize or remove the animations using `SectionsTransitionInfo`.
-You can specify transition info per request (using `SectionsNavigatorRequest.TransitionInfo`) and globally using the following:
-- `FrameSectionsNavigator.DefaultSetActiveSectionTransitionInfo`
-- `FrameSectionsNavigator.DefaultOpenModalTransitionInfo`
-- `FrameSectionsNavigator.DefaultCloseModalTransitionInfo`
+#### Stack navigation
+The platform's default transition is used. Here are examples for iOS and Android respectively.
 
-There are multiple statically available built-in transition info in `FrameSectionsTransitionInfo`.
-Use `FrameSectionsTransitionInfo.SuppressTransition` to disable animations.
-You can also create custom ones using the following classes:
+<img src="docs/images/iOS_StackNavigation_DefaultTransition.gif" alt="iOS Stack Navigation Default Transition" width="250" />
+<br /><br />
+<img src="docs/images/And_StackNavigation_DefaultTransition.gif" alt="Android Stack Navigation Default Transition" width="250" />
+
+You can also suppress the default transitions using `StackNavigatorRequest.SuppressTransitions`.
+
+```csharp
+await navigator.Navigate(ct, () => new ResetPasswordPageViewModel(), suppressTransition: true);
+```
+
+Here is an example of the result on Android.
+
+<img src="docs/images/And_StackNavigation_SuppressTransition.gif" alt="Android Stack Navigation Suppress Transition" width="250" />
+<br /><br />
+
+#### Section navigation
+
+You can customize or remove the section navigation animations using `SectionsTransitionInfo`. 
+The default transition is `FrameSectionsTransitionInfo.FadeInOrFadeOut`. 
+Here is an example on iOS.
+
+<img src="docs/images/iOS_SectionNavigation_DefaultTransition.gif" alt="iOS Section Navigation Default Transition" width="250" />
+
+You can specify transition info per request using `SectionsNavigatorRequest.TransitionInfo`.
+
+```csharp
+await _sectionsNavigator.SetActiveSection(
+  ct,
+  SectionsNavigatorRequest.GetSetActiveSectionRequest(
+    sectionName: "Settings",
+    transitionInfo: FrameSectionsTransitionInfo.SuppressTransition
+  )
+);
+```
+
+You can also specify section navigation transition info globally using the following when instanciating `FrameSectionsNavigator`:
+
+```csharp
+var navigator = new FrameSectionsNavigator(root.MultiFrame, GetPageRegistrations())
+{
+  DefaultSetActiveSectionTransitionInfo = FrameSectionsTransitionInfo.SuppressTransition
+};
+```
+
+#### Modals
+
+You can customize or remove the modals opening and closing animations using `SectionsTransitionInfo`.
+The default modal transition for iOS is its native one, used by `FrameSectionsTransitionInfo.NativeiOSModal`.
+
+<img src="docs/images/iOS_Modal_NativeTransition.gif" alt="iOS Modal Native Transition" width="250" />
+
+For the other platforms, the default modal opening transition is `FrameSectionsTransitionInfo.SlideUp` and the default modal closing transition is `FrameSectionsTransitionInfo.SlideDown`.
+
+<img src="docs/images/And_Modal_DefaultTransition.gif" alt="Android Modal Default Transition" width="250" />
+
+You can specify transition info per request using `SectionsNavigatorRequest.TransitionInfo`. 
+
+```csharp
+await navigator.OpenModal(
+  ct,
+  SectionsNavigatorRequest.GetOpenModalRequest(
+    StackNavigatorRequest.GetNavigateRequest(() => new ResetPasswordPageViewModel()),
+    transitionInfo: FrameSectionsTransitionInfo.FadeInOrFadeOut,
+    newModalClosingTransitionInfo: FrameSectionsTransitionInfo.FadeInOrFadeOut
+  )
+);
+```
+
+You can also specify modal opening and closing transitions info globally using the following when instanciating `FrameSectionsNavigator`:
+
+```csharp
+var navigator = new FrameSectionsNavigator(root.MultiFrame, GetPageRegistrations())
+{
+  DefaultOpenModalTransitionInfo = FrameSectionsTransitionInfo.FadeInOrFadeOut
+  DefaultCloseModalTransitionInfo = FrameSectionsTransitionInfo.FadeInOrFadeOut
+};
+```
+
+This is what the `FrameSectionsTransitionInfo.FadeInOrFadeOut` transition for modals looks like on Android.
+
+<img src="docs/images/And_Modal_FadeInFadeOutTransition.gif" alt="Android Modal Fade In Or Fade Out Transition" width="250" />
+<br /><br />
+
+#### Custom animations
+
+You can also create custom animations using the following classes:
 - `DelegatingFrameSectionsTransitionInfo`
   - Available on all platforms.
   - Allows you to create a transition in an async method where you can animate using `Storyboard`.
