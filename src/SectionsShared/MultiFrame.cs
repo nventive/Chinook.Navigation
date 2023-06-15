@@ -284,7 +284,12 @@ namespace Chinook.SectionsNavigation
 				switch (transitionInfo)
 				{
 					case DelegatingFrameSectionsTransitionInfo frameTransition:
+
 						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
+
+						// Collapse the previous frame under the modal to allow the screen reader to ignore the previous frame.
+						previousFrame.Frame.Visibility = Visibility.Collapsed;
+
 						break;
 					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
 						await nextFrame.ModalViewController.Open(viewControllerTransitionInfo);
@@ -310,6 +315,10 @@ namespace Chinook.SectionsNavigation
 				switch (transitionInfo)
 				{
 					case DelegatingFrameSectionsTransitionInfo frameTransition:
+
+						// Make the frame under the modal visible before showing it.
+						nextFrame.Frame.Visibility = Visibility.Visible;
+
 						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
 						break;
 					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:

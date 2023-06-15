@@ -65,4 +65,5 @@
   </ItemGroup>
 
   <Import Project="..\SectionsShared\SectionsShared.projitems" Label="Shared" />
+  <Import Project="winappsdk-workaround.targets" />
 </Project>
