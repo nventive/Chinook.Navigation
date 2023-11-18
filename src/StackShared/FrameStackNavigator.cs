@@ -291,7 +291,7 @@ namespace Chinook.StackNavigation
 
 					var result = await WaitForNavigationResult(() => _frame.GoBack(overrideInfo));
 
-#if WINDOWS_UWP || WINDOWS
+#if WINDOWS
 					// On Windows, Frame re-creates a new Page instance for every navigation (whether through Navigate or GoBack),
 					// unless NavigationCacheMode is set to Required (in which case a single Page instance is recycled).
 					if (result.Content != activeEntry.View)

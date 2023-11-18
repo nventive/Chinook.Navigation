@@ -15,8 +15,8 @@ variables:
 - name: IsReleaseBranch # Should this branch name use the release stage
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/'))]
 # Pool names
-- name: windowsPoolName
-  value: 'Windows 2022-23'
+- name: windowsHostedAgentImage
+  value: 'windows-2022'
 
 stages:
 - stage: Build
@@ -31,7 +31,7 @@ stages:
           GeneratePackageOnBuild: true
 
     pool:
-      name: $(windowsPoolName)
+      vmImage: $(windowsHostedAgentImage)
 
     variables:
     - name: PackageOutputPath # Path where nuget packages will be copied to.
@@ -50,7 +50,7 @@ stages:
   - job: Publish_NuGet_External
   
     pool:
-      name: $(windowsPoolName)
+      vmImage: $(windowsHostedAgentImage)
 
     workspace:
       clean: all # Cleanup the workspaca before starting
