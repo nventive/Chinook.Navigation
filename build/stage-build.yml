@@ -21,6 +21,13 @@
   displayName: 'Install workloads'
   inputs:
     script: 'dotnet workload install android ios macos maccatalyst'
+
+- task: JavaToolInstaller@0
+  displayName: "Install Java SDK 11"
+  inputs:
+    versionSpec: '11'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
     
 - task: MSBuild@1
   displayName: 'Restore solution packages'
