@@ -10,17 +10,15 @@
     configFilePath: $(Build.SourcesDirectory)/build/gitversion.yml
   displayName: 'Calculate version'
 
-- task: UseDotNet@2
-  displayName: 'Install .NET SDK'
-  inputs:
-    installationPath: '$(Agent.TempDirectory)/dotnet'
-    useGlobalJson: true
-    packageType: 'sdk'
+- script: dotnet workload install android ios macos maccatalyst"
+  displayName: 'Install .NET workloads'
 
-- task: CmdLine@2
-  displayName: 'Install workloads'
+- task: JavaToolInstaller@0
+  displayName: "Install Java SDK 11"
   inputs:
-    script: 'dotnet workload install android ios macos maccatalyst'
+    versionSpec: '11'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
     
 - task: MSBuild@1
   displayName: 'Restore solution packages'

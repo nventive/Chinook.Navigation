@@ -7,15 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackNavigation.Abstraction
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackNavigation", "src\StackNavigation\StackNavigation.csproj", "{E13CC3F0-B36D-4E8B-B294-DE99ED77D08C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackNavigation.Uno", "src\StackNavigation.Uno\StackNavigation.Uno.csproj", "{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navigation.Tests", "src\Navigation.Tests\Navigation.Tests.csproj", "{FFAB6602-A486-4535-AE24-A71ECEA74C4B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SectionsNavigation.Abstractions", "src\SectionsNavigation.Abstractions\SectionsNavigation.Abstractions.csproj", "{7C473072-94C2-41DF-926F-CA0C1269FCF8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SectionsNavigation", "src\SectionsNavigation\SectionsNavigation.csproj", "{D0D2AAD9-7FD5-4CDF-8167-54B7E60EED32}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SectionsNavigation.Uno", "src\SectionsNavigation.Uno\SectionsNavigation.Uno.csproj", "{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SectionsNavigation", "SectionsNavigation", "{21903409-7322-4C3C-B832-9B0009835234}"
 EndProject
@@ -60,12 +56,6 @@ Global
 		{E13CC3F0-B36D-4E8B-B294-DE99ED77D08C}.Release_Packages|Any CPU.Build.0 = Release|Any CPU
 		{E13CC3F0-B36D-4E8B-B294-DE99ED77D08C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E13CC3F0-B36D-4E8B-B294-DE99ED77D08C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Release_Packages|Any CPU.ActiveCfg = Release|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Release_Packages|Any CPU.Build.0 = Release|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFAB6602-A486-4535-AE24-A71ECEA74C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFAB6602-A486-4535-AE24-A71ECEA74C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFAB6602-A486-4535-AE24-A71ECEA74C4B}.Release_Packages|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,12 +74,6 @@ Global
 		{D0D2AAD9-7FD5-4CDF-8167-54B7E60EED32}.Release_Packages|Any CPU.Build.0 = Release|Any CPU
 		{D0D2AAD9-7FD5-4CDF-8167-54B7E60EED32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0D2AAD9-7FD5-4CDF-8167-54B7E60EED32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Release_Packages|Any CPU.ActiveCfg = Release|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Release_Packages|Any CPU.Build.0 = Release|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61BFC425-08FD-4DF2-8E61-AFC9287FC3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61BFC425-08FD-4DF2-8E61-AFC9287FC3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61BFC425-08FD-4DF2-8E61-AFC9287FC3CD}.Release_Packages|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,10 +105,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{513558A7-829F-4DDA-A1CE-08D99BA0F9D0} = {BC125B1E-7DD4-47AB-ABB6-F9A006218DC4}
 		{E13CC3F0-B36D-4E8B-B294-DE99ED77D08C} = {BC125B1E-7DD4-47AB-ABB6-F9A006218DC4}
-		{3EBB42DF-82E9-4DA4-B853-EA22E5D2D3C2} = {BC125B1E-7DD4-47AB-ABB6-F9A006218DC4}
 		{7C473072-94C2-41DF-926F-CA0C1269FCF8} = {21903409-7322-4C3C-B832-9B0009835234}
 		{D0D2AAD9-7FD5-4CDF-8167-54B7E60EED32} = {21903409-7322-4C3C-B832-9B0009835234}
-		{46673DF9-C917-4672-AE5B-ECA6BD4C2F37} = {21903409-7322-4C3C-B832-9B0009835234}
 		{61BFC425-08FD-4DF2-8E61-AFC9287FC3CD} = {BC125B1E-7DD4-47AB-ABB6-F9A006218DC4}
 		{DA1909D4-0823-4093-A635-9C42CDBF5F3D} = {21903409-7322-4C3C-B832-9B0009835234}
 		{B1259F8E-4239-4C5E-9C12-D39277A3A10E} = {21903409-7322-4C3C-B832-9B0009835234}
@@ -136,8 +118,6 @@ Global
 		SolutionGuid = {8EC37D3B-56FD-4AB2-91B2-7D33467592F9}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\StackShared\StackShared.projitems*{3ebb42df-82e9-4da4-b853-ea22e5d2d3c2}*SharedItemsImports = 5
-		src\SectionsShared\SectionsShared.projitems*{46673df9-c917-4672-ae5b-eca6bd4c2f37}*SharedItemsImports = 5
 		src\StackShared\StackShared.projitems*{94ce9cdb-c65b-4777-8465-7ec61bc43790}*SharedItemsImports = 5
 		src\SectionsShared\SectionsShared.projitems*{b1259f8e-4239-4c5e-9c12-d39277a3a10e}*SharedItemsImports = 5
 		src\StackShared\StackShared.projitems*{cbf60655-21fc-43e9-bb37-6c052288ca83}*SharedItemsImports = 13
