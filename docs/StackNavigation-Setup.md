@@ -34,7 +34,7 @@
      { typeof(MainPageViewModel), typeof(MainPage) }
    };
    ```
-1. From a blank UWP (Legacy) application, create a `FrameStackNavigator` using the predefined `rootFrame` in the `OnLaunched` method of `App.xaml.cs`.
+1. From a blank WinUI application, create a `FrameStackNavigator` using the predefined `rootFrame` in the `OnLaunched` method of `App.xaml.cs`.
 
    Overral, `OnLaunched` should look like this after the changes.
    ```csharp
