@@ -1,6 +1,6 @@
 # Getting started with Stack Navigation
 
-1. Install the latest version of `Chinook.StackNavigation.Uno` in your project.
+1. Install the latest version of `Chinook.StackNavigation.Uno.WinUI` in your project.
 
 1. Create a base class that implements `INavigableViewModel` for your ViewModels.
 
@@ -34,7 +34,7 @@
      { typeof(MainPageViewModel), typeof(MainPage) }
    };
    ```
-1. From a blank UWP application, create a `FrameStackNavigator` using the predefined `rootFrame` in the `OnLaunched` method of `App.xaml.cs`.
+1. From a blank WinUI application, create a `FrameStackNavigator` using the predefined `rootFrame` in the `OnLaunched` method of `App.xaml.cs`.
 
    Overral, `OnLaunched` should look like this after the changes.
    ```csharp
