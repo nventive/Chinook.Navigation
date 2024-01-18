@@ -331,6 +331,9 @@ if (sectionsNavigator.CanNavigateBackOrCloseModal())
 }
 ```
 
+#### Support Screen Reader
+Consider setting `MultiFrame.CollapsePreviousFrameWhenOpeningModals` to `true` to prevent previous frames (behind modals) from being focusable.
+
 ### Observe the SectionsNavigator's State
 You can access the sections navigator's state using `ISectionsNavigator.State`.
 It gives you access to all section stacks and modal stacks as well as the last request.
