@@ -100,6 +100,13 @@ namespace Chinook.SectionsNavigation
 		public IReadOnlyList<string> SectionsFrameNames { get; private set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the previous frame should be collapsed when opening a modal.
+		/// Settings this to true can be useful to allow the screen reader to ignore the previous frame.
+		/// If your modals contain transparency, you might prefer keeping this false.
+		/// </summary>
+		public bool CollapsePreviousFrameWhenOpeningModals { get; set; }
+
+		/// <summary>
 		/// Gets an existing Frame with the specified name.
 		/// </summary>
 		/// <param name="name">The name of the frame to retrieve.</param>
@@ -287,8 +294,11 @@ namespace Chinook.SectionsNavigation
 
 						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: true);
 
-						// Collapse the previous frame under the modal to allow the screen reader to ignore the previous frame.
-						previousFrame.Frame.Visibility = Visibility.Collapsed;
+						if (CollapsePreviousFrameWhenOpeningModals)
+						{
+							// Collapse the previous frame under the modal to allow the screen reader to ignore the previous frame.
+							previousFrame.Frame.Visibility = Visibility.Collapsed;
+						}
 
 						break;
 					case UIViewControllerSectionsTransitionInfo viewControllerTransitionInfo:
@@ -316,8 +326,11 @@ namespace Chinook.SectionsNavigation
 				{
 					case DelegatingFrameSectionsTransitionInfo frameTransition:
 
-						// Make the frame under the modal visible before showing it.
-						nextFrame.Frame.Visibility = Visibility.Visible;
+						if (CollapsePreviousFrameWhenOpeningModals)
+						{
+							// Make the frame under the modal visible before showing it.
+							nextFrame.Frame.Visibility = Visibility.Visible;
+						}
 
 						await frameTransition.Run(frameToHide: previousFrame.Frame, frameToShow: nextFrame.Frame, frameToShowIsAboveFrameToHide: false);
 						break;
