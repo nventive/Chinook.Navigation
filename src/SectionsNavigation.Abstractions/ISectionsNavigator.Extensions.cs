@@ -76,7 +76,7 @@ namespace Chinook.SectionsNavigation
 				else
 				{
 					// If the section root page isn't in the stack, clear everything and navigate to it.
-					await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelProvider, suppressTransitions: true, clearBackStack: true));
+					await sectionNavigator.Navigate(ct, StackNavigatorRequest.GetNavigateRequest(viewModelType, viewModelProvider, suppressTransitions: true, clearBackStack: true));
 				}
 			}
 
