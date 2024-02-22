@@ -111,7 +111,7 @@ namespace Chinook.StackNavigation
 				{
 					if (_logger.IsEnabled(LogLevel.Warning))
 					{
-						_logger.LogWarning($"Canceled 'Clear' operation because another request is processing. (Processing request: '{State.LastRequest}')");
+						_logger.LogWarning("Canceled 'Clear' operation because another request is processing. (Processing request: '{LastRequest}')");
 					}
 
 					return;
@@ -124,10 +124,12 @@ namespace Chinook.StackNavigation
 			{
 				foreach (var entry in Stack)
 				{
-					entry.ViewModel.Dispose();
+					entry.ViewModel.WillDispose();
 				}
 
-				await InnerClear();
+				var entriesToRemove = Stack.ToArray();
+
+				await InnerClear(entriesToRemove);
 
 				State = new StackNavigatorState(
 					stack: new List<NavigationStackEntry>(),
@@ -148,9 +150,9 @@ namespace Chinook.StackNavigation
 		}
 
 		/// <summary>
-		/// Implementors must override this method to typically update the View layer.
+		/// Implementors must override this method to typically update the View layer and dispose the ViewModels once released from the view.
 		/// </summary>
-		protected abstract Task InnerClear();
+		protected abstract Task InnerClear(NavigationStackEntry[] entriesToRemove);
 
 		/// <inheritdoc/>
 		public async Task RemoveEntries(CancellationToken ct, IEnumerable<int> indexes)
@@ -197,11 +199,13 @@ namespace Chinook.StackNavigation
 				// Start with the last item so that the indexes stay valid as we iterate.
 				foreach (var index in orderedIndexes)
 				{
-					stack[index].ViewModel.Dispose();
+					stack[index].ViewModel.WillDispose();
 					stack = stack.ImmutableRemoveAt(index);
 				}
 
-				await InnerRemoveEntries(orderedIndexes);
+				var entriesToRemove = orderedIndexes.Select(s => Stack.ElementAt(s)).ToArray();
+
+				await InnerRemoveEntries(orderedIndexes, entriesToRemove);
 
 				State = new StackNavigatorState(
 					stack: stack,
@@ -222,10 +226,11 @@ namespace Chinook.StackNavigation
 		}
 
 		/// <summary>
-		/// Implementors must override this method to typically update the View layer.
+		/// Implementors must override this method to typically update the View layer and dispose the ViewModels once released from the view.
 		/// </summary>
 		/// <param name="orderedIndexes">The list of indexes at which entries are being removed.</param>
-		protected abstract Task InnerRemoveEntries(IEnumerable<int> orderedIndexes);
+		/// <param name="entriesToRemove">The list of entries being removed.</param>
+		protected abstract Task InnerRemoveEntries(IEnumerable<int> orderedIndexes, NavigationStackEntry[] entriesToRemove);
 
 		/// <inheritdoc/>
 		public async Task<INavigableViewModel> Navigate(CancellationToken ct, StackNavigatorRequest request)
@@ -351,7 +356,7 @@ namespace Chinook.StackNavigation
 					var entryToRemove = Stack.Last();
 					var activeEntry = Stack[Stack.Count - 2];
 
-					entryToRemove.ViewModel.Dispose();
+					entryToRemove.ViewModel.WillDispose();
 
 					await InnerNavigateBack(entryToRemove, activeEntry);
 
@@ -375,11 +380,39 @@ namespace Chinook.StackNavigation
 		}
 
 		/// <summary>
-		/// Implementors must override this method to typically update the View layer.
+		/// Implementors must override this method to typically update the View layer and dispose the ViewModel once released from the view.
 		/// </summary>
 		/// <param name="entryToRemove">The entry being removed.</param>
 		/// <param name="activeEntry">The entry becoming active.</param>
 		protected abstract Task InnerNavigateBack(NavigationStackEntry entryToRemove, NavigationStackEntry activeEntry);
+
+		/// <summary>
+		/// Disposes the ViewModel instances of the specified entries.
+		/// </summary>
+		/// <param name="entries">The entries to dispose.</param>
+		protected void DisposeEntries(params NavigationStackEntry[] entries)
+		{			
+			foreach (var entry in entries)
+			{
+				try
+				{
+					if (_logger.IsEnabled(LogLevel.Trace))
+					{
+						_logger.LogTrace("Disposing ViewModel of type '{ViewModelType}'.", entry.Request.ViewModelType);
+					}
+					
+					entry.ViewModel.Dispose();
+				}
+				catch (Exception e)
+				{
+					if (_logger.IsEnabled(LogLevel.Error))
+					{
+						_logger.LogError(e, "Failed to dispose ViewModel of type '{ViewModelType}'.", entry.Request.ViewModelType);
+					}
+					throw;
+				}
+			}
+		}
 
 		/// <inheritdoc/>
 		public override string ToString()
