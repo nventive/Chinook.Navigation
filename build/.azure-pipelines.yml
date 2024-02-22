@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - main
+    - hotfix-2.x
 
 variables:
 - name: NUGET_VERSION
@@ -13,7 +13,7 @@ variables:
 - name: SolutionFileName # Example: MyApplication.sln
   value: Navigation.sln
 - name: IsReleaseBranch # Should this branch name use the release stage
-  value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/'))]
+  value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/hotfix-2.x'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/'))]
 # Pool names
 - name: windowsPoolName
   value: 'Windows 2022-23'
