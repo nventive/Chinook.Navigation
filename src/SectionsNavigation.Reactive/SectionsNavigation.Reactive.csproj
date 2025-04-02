@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<LangVersion>11.0</LangVersion>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<LangVersion>12</LangVersion>
 		<RootNamespace>Chinook.SectionsNavigation</RootNamespace>
 		<Authors>nventive</Authors>
 		<Company>nventive</Company>
