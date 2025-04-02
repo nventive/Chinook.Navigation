@@ -1,5 +1,10 @@
 # Breaking Changes
 
+## 4.0.0
+
+- Added support for .NET 8.
+- Removed support for .NET 7.
+
 ## 3.0.0
 
 - Added support for .NET 7.
