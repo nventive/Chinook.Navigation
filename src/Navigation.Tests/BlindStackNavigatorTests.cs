@@ -436,8 +436,15 @@ namespace Tests
 
 			public bool IsDisposed { get; private set; }
 
+			public bool WillDisposeWasCalled { get; private set; }
+
 			public void Dispose()
 			{
+				if (!WillDisposeWasCalled)
+				{
+					throw new InvalidOperationException("WillDispose was not called before Dispose.");
+				}
+
 				if (_throwOnDispose)
 				{
 					throw new InvalidOperationException();
@@ -449,6 +456,11 @@ namespace Tests
 			public void SetView(object view)
 			{
 				throw new NotImplementedException();
+			}
+
+			public void WillDispose()
+			{
+				WillDisposeWasCalled = true;
 			}
 		}
 	}
