@@ -8,7 +8,7 @@ namespace Chinook.StackNavigation
 {
 	/// <summary>
 	/// This implementation of <see cref="IStackNavigator"/> doesn't deal with any view.
-	/// It's useful for unit testing.
+	/// It's useful for testing.
 	/// </summary>
 	public class BlindStackNavigator : StackNavigatorBase
 	{
@@ -23,16 +23,18 @@ namespace Chinook.StackNavigation
 		protected override ILogger GetLogger() => this.Log();
 
 		/// <inheritdoc/>
-		protected override Task InnerClear()
+		protected override Task InnerClear(NavigationStackEntry[] entriesToRemove)
 		{
-			// Don't do anything.
+			DisposeEntries(entriesToRemove);
+			
 			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc/>
-		protected override Task InnerRemoveEntries(IEnumerable<int> orderedIndexes)
+		protected override Task InnerRemoveEntries(IEnumerable<int> orderedIndexes, NavigationStackEntry[] entriesToRemove)
 		{
-			// Don't do anything.
+			DisposeEntries(entriesToRemove);
+
 			return Task.CompletedTask;
 		}
 
@@ -46,7 +48,8 @@ namespace Chinook.StackNavigation
 		/// <inheritdoc/>
 		protected override Task InnerNavigateBack(NavigationStackEntry entryToRemove, NavigationStackEntry activeEntry)
 		{
-			// Don't do anything.
+			DisposeEntries(entryToRemove);
+
 			return Task.CompletedTask;
 		}
 	}
