@@ -33,11 +33,11 @@ namespace Chinook.SectionsNavigation
 			frame1.IsHitTestVisible = false;
 
 			// 2. Make the next frame visible so that we see it as the previous frame fades out.
-			frame2.Opacity = 1;
 #if __IOS__ || __ANDROID__
-			// TODO: Fix this workaround
-			frame2.SetValue(UIElement.OpacityProperty, 1d, DependencyPropertyValuePrecedences.Animations);
+			// See issue https://github.com/unoplatform/uno/issues/22375 for more details.
+			frame2.ClearValue(UIElement.OpacityProperty);
 #endif
+			frame2.Opacity = 1;
 			frame2.Visibility = Visibility.Visible;
 			frame2.IsHitTestVisible = true;
 
@@ -56,11 +56,11 @@ namespace Chinook.SectionsNavigation
 			frame1.IsHitTestVisible = false;
 
 			// 2. Make the next frame visible, but transparent.
-			frame2.Opacity = 0;
 #if __IOS__ || __ANDROID__
-			// TODO: Fix this workaround
-			frame2.SetValue(UIElement.OpacityProperty, 0d, DependencyPropertyValuePrecedences.Animations);
+			// See issue https://github.com/unoplatform/uno/issues/22375 for more details.
+			frame2.ClearValue(UIElement.OpacityProperty);
 #endif
+			frame2.Opacity = 0;
 			frame2.Visibility = Visibility.Visible;
 
 			// 3. Fade in the frame.
