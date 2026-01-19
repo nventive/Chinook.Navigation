@@ -1,5 +1,11 @@
 # Breaking Changes
 
+## 5.0.0
+
+- Updated .NET from 8 to 10.
+- Updated Uno from 5 to 6.
+- Updated Uno.WinUI to 6.3.62.
+
 ## 4.0.0
 
 - Added support for .NET 8.
