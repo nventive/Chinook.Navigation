@@ -23,6 +23,10 @@ steps:
     version: ${{ parameters.DotNetVersion }}
     includePreviewVersions: true
 
+- powershell: dotnet workload install android ios maccatalyst macos
+  displayName: 'Install .NET workloads'
+  retryCountOnTaskFailure: 3
+
 - powershell: |
     & dotnet tool update --global uno.check --version ${{ parameters.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
     & uno-check -v --ci --non-interactive --fix --skip xcode --skip gtk3 --skip vswin --skip vsmac --skip androidsdk --skip androidemulator --manifest ${{ parameters.UnoCheck_Manifest }}
