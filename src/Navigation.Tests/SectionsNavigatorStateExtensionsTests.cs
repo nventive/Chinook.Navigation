@@ -177,6 +177,10 @@ namespace Tests
 			public void SetView(object view)
 			{
 			}
+
+			public void WillDispose()
+			{
+			}
 		}
 
 		private class HomePageVM : TestVMBase { }

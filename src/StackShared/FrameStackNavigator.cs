@@ -100,10 +100,8 @@ namespace Chinook.StackNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override async Task InnerClear()
+		protected override async Task InnerClear(NavigationStackEntry[] entriesToRemove)
 		{
-			var entriesToRemove = Stack.ToArray();
-
 			await Dispatcher.RunAsync(CoreDispatcherPriority.High, UIClear);
 
 			_ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entriesToRemove));
@@ -116,10 +114,8 @@ namespace Chinook.StackNavigation
 		}
 
 		/// <inheritdoc/>
-		protected override async Task InnerRemoveEntries(IEnumerable<int> orderedIndexes)
+		protected override async Task InnerRemoveEntries(IEnumerable<int> orderedIndexes, NavigationStackEntry[] entriesToRemove)
 		{
-			var entriesToRemove = orderedIndexes.Select(s => Stack.ElementAt(s)).ToArray();
-
 			await Dispatcher.RunAsync(CoreDispatcherPriority.High, UIRemoveEntries);
 
 			_ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIResetDataContext(entriesToRemove));
@@ -356,6 +352,9 @@ namespace Chinook.StackNavigation
 						// to its ViewModel and create potential memory leaks.
 						frameworkElement.DataContext = null;
 					}
+
+					// We dispose the ViewModels after the View released its reference to it.
+					_ = Task.Run(DisposeViewModels);
 				}
 				catch (Exception e)
 				{
@@ -364,6 +363,11 @@ namespace Chinook.StackNavigation
 						_logger.LogError($"Failed to reset the data context.", e);
 					}
 				}
+			}
+
+			void DisposeViewModels()
+			{
+				DisposeEntries(entries);
 			}
 		}
 	}
